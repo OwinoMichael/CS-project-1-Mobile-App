@@ -5,8 +5,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:prdip/main.dart';
-import 'package:prdip/screens/forgot_password.dart';
-import 'package:prdip/screens/main_screen.dart';
+import 'package:prdip/screens/cl auth screens/forgot_password.dart';
+import 'package:prdip/screens/cl auth screens/main_screen.dart';
 import 'package:prdip/widgets/progressDialog.dart';
 import 'Registration_screen.dart';
 

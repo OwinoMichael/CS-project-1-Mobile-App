@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:prdip/model/slide.dart';
-import 'package:prdip/screens/Registration_screen.dart';
+import 'package:prdip/screens/cl auth screens/Registration_screen.dart';
 import 'package:prdip/widgets/slide_dots.dart';
 import 'package:prdip/widgets/slide_item.dart';
 

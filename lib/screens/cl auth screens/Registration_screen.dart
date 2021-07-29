@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:prdip/main.dart';
-import 'package:prdip/screens/main_screen.dart';
+import 'package:prdip/screens/cl auth screens/main_screen.dart';
 import 'package:prdip/widgets/progressDialog.dart';
 
 

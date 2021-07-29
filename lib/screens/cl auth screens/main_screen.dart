@@ -1,9 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:prdip/screens/user%20screens/home_screen.dart';
-import 'package:prdip/screens/user%20screens/orders_screen.dart';
-import 'package:prdip/screens/user%20screens/search_screen.dart';
-import 'package:prdip/screens/user%20screens/userProfile_screen.dart';
+import 'package:prdip/screens/cl user screens/home_screen.dart';
+import 'package:prdip/screens/cl user screens/orders_screen.dart';
+import 'package:prdip/screens/cl user screens/search_screen.dart';
+import 'package:prdip/screens/cl user screens/userProfile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   static const String idScreen = "main";

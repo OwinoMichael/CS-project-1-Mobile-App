@@ -32,6 +32,7 @@ dependencies:
   animations: ^2.0.1
   font_awesome: ^5.10.1
   font_awesome_flutter: ^9.1.0
+  carousel_slider: ^4.0.0
 
 
 dev_dependencies:
@@ -52,9 +53,20 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+
+#    - images/
     - assets/images/image1.jpg
     - assets/images/image2.jpg
     - assets/images/image3.jpg
+    - assets/images/handyman1.jpg
+    - assets/images/plumbing.jpg
+    - assets/images/electrical.jpg
+    - assets/images/woodwork.jpg
+    - assets/images/paintjob.jpg
+    - assets/images/appliance.jpg
+    - assets/images/tiler.jpg
+    - assets/images/glasswork.jpg
+    - assets/images/metalworks.jpg
 
     # - images/a_dot_ham.jpeg
 

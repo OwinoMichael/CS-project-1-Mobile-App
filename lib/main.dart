@@ -1,11 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:prdip/screens/Login_screen.dart';
-import 'package:prdip/screens/forgot_password.dart';
-import 'package:prdip/screens/main_screen.dart';
-import './screens/Registration_screen.dart';
-import './screens/getting_started_screen.dart';
+import 'package:prdip/screens/cl auth screens/Login_screen.dart';
+import 'package:prdip/screens/cl auth screens/forgot_password.dart';
+import 'package:prdip/screens/cl auth screens/main_screen.dart';
+import './screens/cl auth screens/Registration_screen.dart';
+import './screens/cl auth screens/getting_started_screen.dart';
 
 
 void main() async
