@@ -3,21 +3,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:prdip/main.dart';
-import 'package:prdip/screens/cl auth screens/main_screen.dart';
-import 'package:prdip/screens/cl%20auth%20screens/verify.dart';
+import 'package:prdip/screens/sp user screens/Landing_screen.dart';
+import 'package:prdip/screens/sp%20auth%20screens/Primary_screen.dart';
 import 'package:prdip/widgets/progressDialog.dart';
-import 'package:prdip/screens/sp auth screens/Sp_SignUp_screen.dart';
+import 'package:prdip/screens/sp auth screens/Sp_Login_screen.dart';
+import 'package:prdip/screens/cl auth screens/Registration_screen.dart';
 
-import 'Login_screen.dart';
-
-class RegistrationScreen extends StatefulWidget {
-  static const String idScreen = "register";
+class SpRegistrationScreen extends StatefulWidget {
+  static const String idScreen = "sp_register";
 
   @override
-  _RegistrationScreenState createState() => _RegistrationScreenState();
+  _SpRegistrationScreenState createState() => _SpRegistrationScreenState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
+class _SpRegistrationScreenState extends State<SpRegistrationScreen> {
   TextEditingController nameTextEditingController = TextEditingController();
 
   TextEditingController emailTextEditingController = TextEditingController();
@@ -64,8 +63,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 SizedBox(
                   height: 1.0,
                 ),
-                Text('Register an Account',
-                    style: TextStyle(fontSize: 26.0, fontFamily: ""),
+                Text('Register an Account as Handyman',
+                    style: TextStyle(fontSize: 30.0, fontFamily: ""),
                     textAlign: TextAlign.center),
                 Padding(
                   padding: EdgeInsets.all(20.0),
@@ -118,15 +117,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           prefixIcon: Icon(Icons.person),
                           labelText: "Name",
                           labelStyle: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 25.0,
                           ),
                           hintStyle: TextStyle(
                             color: Colors.grey,
-                            fontSize: 20.0,
+                            fontSize: 25.0,
                           ),
                         ),
                         style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: 14.0,
                         ),
                       ),
 
@@ -140,15 +139,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           prefixIcon: Icon(Icons.email),
                           labelText: "Email",
                           labelStyle: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 25.0,
                           ),
                           hintStyle: TextStyle(
                             color: Colors.grey,
-                            fontSize: 20.0,
+                            fontSize: 25.0,
                           ),
                         ),
                         style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: 14.0,
                         ),
                       ),
 
@@ -162,15 +161,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           prefixIcon: Icon(Icons.phone),
                           labelText: "Phone",
                           labelStyle: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 25.0,
                           ),
                           hintStyle: TextStyle(
                             color: Colors.grey,
-                            fontSize: 20.0,
+                            fontSize: 25.0,
                           ),
                         ),
                         style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: 14.0,
                         ),
                       ),
 
@@ -286,25 +285,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   child: Text(
                     "Already have an Account? Login Here",
                     style: TextStyle(
-                      fontSize: 17.0,
+                      fontSize: 18.0,
                     ),
                   ),
                   onPressed: () {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, LoginScreen.idScreen, (route) => false);
+                        context, SpLoginScreen.idScreen, (route) => false);
                   },
                 ),
                 FlatButton(
                   child: Text(
-                    "Switch to Handyman's side",
+                    "Switch to Clients's side",
                     style: TextStyle(
-                      fontSize: 17.0,
+                      fontSize: 18.0,
                       color: Colors.deepPurple,
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(context,
-                        SpRegistrationScreen.idScreen, (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, RegistrationScreen.idScreen, (route) => false);
                   },
                 ),
               ],
@@ -344,12 +343,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         "phone": phoneTextEditingController.text.trim(),
       };
 
-      userRef.child(firebaseUser.uid).set(userDataMap);
+      spRef.child(firebaseUser.uid).set(userDataMap);
       displayToastMessage(
           "Congratulations, your account has been created.", context);
-      //Navigator.pushNamedAndRemoveUntil(context, MainScreen.idScreen, (route) => false);
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => VerifyEmail()));
+      Navigator.pushNamedAndRemoveUntil(
+          context, PrimaryScreen.idScreen, (route) => false);
     } else {
       Navigator.pop(context);
       //Error occured

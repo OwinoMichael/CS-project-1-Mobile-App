@@ -5,22 +5,21 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:prdip/main.dart';
+import 'package:prdip/screens/cl auth screens/Login_Screen.dart';
 import 'package:prdip/screens/cl auth screens/forgot_password.dart';
-import 'package:prdip/screens/cl auth screens/main_screen.dart';
+import 'package:prdip/screens/sp user screens/Landing_screen.dart';
+import 'package:prdip/screens/sp%20auth%20screens/Primary_screen.dart';
 import 'package:prdip/widgets/progressDialog.dart';
-import 'package:prdip/screens/cl auth screens/Registration_screen.dart';
 import 'package:prdip/screens/sp auth screens/Sp_SignUp_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const String idScreen = "login";
-
-  static const routeName = '/login';
+class SpLoginScreen extends StatefulWidget {
+  static const String idScreen = "sp_login";
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _SpLoginScreenState createState() => _SpLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SpLoginScreenState extends State<SpLoginScreen> {
   TextEditingController emailTextEditingController = TextEditingController();
 
   TextEditingController passwordTextEditingController = TextEditingController();
@@ -52,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               SizedBox(height: 1.0,),
               Text(
-                'Login',
+                'Login as Handyman',
                 style: TextStyle(fontSize: 30.0, fontFamily: ""),
                 textAlign: TextAlign.center
               ),
@@ -70,66 +69,75 @@ class _LoginScreenState extends State<LoginScreen> {
                       prefixIcon: Icon(Icons.email),
                       labelText: "Email",
                       labelStyle: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 25.0,
                     ),
                       hintStyle: TextStyle(
                       color: Colors.grey,
-                      fontSize: 20.0,
+                      fontSize: 25.0,
                       ),
                 ),
                 style: TextStyle(fontSize: 14.0,),
               ),
+
+
                 SizedBox(height: 10.0,),
+
+
                     TextField(
-                      controller: passwordTextEditingController,
-                      obscureText: _showEye ? _passwordIsEncrypted : true,
-                      onChanged: (enteredPassword){
-                        _password = enteredPassword;
-                        if(enteredPassword.isEmpty) {
+                        controller: passwordTextEditingController,
+                        obscureText: _showEye ? _passwordIsEncrypted : true,
+                        onChanged: (enteredPassword) {
+                          _password = enteredPassword;
+                          if (enteredPassword.isEmpty) {
                             setState(() {
                               _showEye = false;
                             });
-                        }else{
-                          if(!_showEye){
-                            setState((){
-                              _showEye = !_showEye;
-                            });
+                          } else {
+                            if (!_showEye) {
+                              setState(() {
+                                _showEye = !_showEye;
+                              });
+                            }
                           }
-
-                        }
-                      },
-                      decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.lock),
-                      suffixIcon: _showEye ? 
-                        GestureDetector(
-                            child: _passwordIsEncrypted 
-                              ? Container(
-                              child: Icon(Icons.visibility, color: Colors.blueGrey,),
-                              )
-                              : Container(
+                        },
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.lock),
+                          suffixIcon: _showEye
+                              ? GestureDetector(
+                                  child: _passwordIsEncrypted
+                                      ? Container(
+                                          child: Icon(
+                                            Icons.visibility,
+                                            color: Colors.blueGrey,
+                                          ),
+                                        )
+                                      : Container(
                                           child: Icon(
                                             Icons.visibility_off,
                                             color: Colors.deepPurple,
                                           ),
                                         ),
-                            onTap: () {
-                              setState(() {
-                                _passwordIsEncrypted = !_passwordIsEncrypted;
-                              });
-                          },
-                        
-                      ) : null,
-                      labelText: "Password",
-                      labelStyle: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                      hintStyle: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 20.0,
+                                  onTap: () {
+                                    setState(() {
+                                      _passwordIsEncrypted =
+                                          !_passwordIsEncrypted;
+                                    });
+                                  },
+                                )
+                              : null,
+                          labelText: "Password",
+                          labelStyle: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                        style: TextStyle(
+                          fontSize: 14.0,
+                        ),
                       ),
-                ),
-                style: TextStyle(fontSize: 14.0,),
-              ),
 
                 SizedBox(height: 10.0,),
 
@@ -143,6 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         "Login",
                         style: TextStyle(
                           fontSize: 25.0,
+                          fontFamily: "",
                         ),
                       ),
                     ),
@@ -171,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Text(
                   "Forgot Password?",
                   style: TextStyle(
-                          fontSize: 17.0,),
+                          fontSize: 18.0,),
                 ),
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(context, ForgotPasswordScreen.idScreen, (route) => false);
@@ -184,22 +193,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Text(
                   "Don't have an Account? Register Here",
                   style: TextStyle(
-                          fontSize: 17.0,),
+                          fontSize: 18.0,),
                 ),
                 onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(context, RegistrationScreen.idScreen, (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(context, SpRegistrationScreen.idScreen, (route) => false);
                 },
               ),
               FlatButton(
                 child: Text(
-                  "Switch to Handyman's side",
+                  "Switch to Client's side",
                   style: TextStyle(
-                          fontSize: 17.0,
+                          fontSize: 18.0,
                           color: Colors.deepPurple,
                           ),
                 ),
                 onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(context, SpRegistrationScreen.idScreen, (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(context, LoginScreen.idScreen, (route) => false);
                 },
               ),
             ],
@@ -231,9 +240,9 @@ void loginAndAuthentication( BuildContext context) async {
           })).user;
       
               if(firebaseUser != null){ //success
-                 userRef.child(firebaseUser.uid).once().then((DataSnapshot snap){
+                 spRef.child(firebaseUser.uid).once().then((DataSnapshot snap){
                    if(snap.value != null){
-                     Navigator.pushNamedAndRemoveUntil(context, MainScreen.idScreen, (route) => false);
+                     Navigator.pushNamedAndRemoveUntil(context, PrimaryScreen.idScreen, (route) => false);
                      displayToastMessage("You are logged in now", context);
                    }
                    else{
@@ -253,32 +262,3 @@ void loginAndAuthentication( BuildContext context) async {
           Fluttertoast.showToast(msg: message);
         }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

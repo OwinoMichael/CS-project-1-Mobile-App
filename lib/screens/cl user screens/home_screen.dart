@@ -31,7 +31,22 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox( height: 10,),
 
-          Text("In demand", textSt),
+          Text("In demand", style: TextStyle(
+            fontSize: 16,
+            color: Colors.black,
+            //fontWeight: FontWeight.normal,
+            //backgroundColor: Colors.white,
+            //decoration: TextDecoration.underline,
+            //wordSpacing: 10.0,
+            // shadows: [
+            //   Shadow(
+            //     color: Colors.deepPurple,
+            //     blurRadius: 2.0,
+            //     offset: Offset(1,1),
+            //   ),
+            // ],
+          ),
+          ),
 
           SizedBox( height: 10,),
 
@@ -197,7 +212,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
           SizedBox( height: 10,),
 
-          Text("Latest"),
+          Text("Latest", style: TextStyle(
+            fontSize: 16,
+            color: Colors.black,
+            //fontWeight: FontWeight.normal,
+            //backgroundColor: Colors.white,
+            //decoration: TextDecoration.underline,
+            //wordSpacing: 10.0,
+            // shadows: [
+            //   Shadow(
+            //     color: Colors.deepPurple,
+            //     blurRadius: 2.0,
+            //     offset: Offset(1,1),
+            //   ),
+            // ],
+          ),),
 
           SizedBox( height: 10,),
             

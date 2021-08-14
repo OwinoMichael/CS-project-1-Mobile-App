@@ -95,7 +95,10 @@ class _GettingStartedScreenState extends State<GettingStartedScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   FlatButton(
-                    child: Text('Get Started', style: TextStyle(fontSize: 18),),
+                    child: Text('Get Started', 
+                    style: TextStyle(fontSize: 18,),
+
+                      ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5)
                     ),
