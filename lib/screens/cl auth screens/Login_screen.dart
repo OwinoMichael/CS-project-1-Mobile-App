@@ -9,8 +9,6 @@ import 'package:prdip/screens/cl auth screens/forgot_password.dart';
 import 'package:prdip/screens/cl auth screens/main_screen.dart';
 import 'package:prdip/widgets/progressDialog.dart';
 import 'package:prdip/screens/cl auth screens/Registration_screen.dart';
-import 'package:prdip/screens/sp auth screens/Sp_SignUp_screen.dart';
-
 class LoginScreen extends StatefulWidget {
   static const String idScreen = "login";
 
@@ -188,18 +186,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(context, RegistrationScreen.idScreen, (route) => false);
-                },
-              ),
-              FlatButton(
-                child: Text(
-                  "Switch to Handyman's side",
-                  style: TextStyle(
-                          fontSize: 17.0,
-                          color: Colors.deepPurple,
-                          ),
-                ),
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(context, SpRegistrationScreen.idScreen, (route) => false);
                 },
               ),
             ],

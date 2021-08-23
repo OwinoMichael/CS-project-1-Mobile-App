@@ -6,7 +6,6 @@ import 'package:prdip/main.dart';
 import 'package:prdip/screens/cl auth screens/main_screen.dart';
 import 'package:prdip/screens/cl%20auth%20screens/verify.dart';
 import 'package:prdip/widgets/progressDialog.dart';
-import 'package:prdip/screens/sp auth screens/Sp_SignUp_screen.dart';
 
 import 'Login_screen.dart';
 
@@ -294,19 +293,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         context, LoginScreen.idScreen, (route) => false);
                   },
                 ),
-                FlatButton(
-                  child: Text(
-                    "Switch to Handyman's side",
-                    style: TextStyle(
-                      fontSize: 17.0,
-                      color: Colors.deepPurple,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(context,
-                        SpRegistrationScreen.idScreen, (route) => false);
-                  },
-                ),
+                
               ],
             ),
           ),

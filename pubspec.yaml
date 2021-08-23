@@ -43,6 +43,11 @@ dependencies:
   firebase_storage: ^10.0.1
   shared_preferences: ^2.0.6
   google_fonts: ^2.1.0
+  google_maps_flutter: ^2.0.6
+  geolocator: ^7.4.0
+  http: ^0.13.3
+  provider: ^5.0.0
+  flutter_polyline_points: ^1.0.0
 
 
 dev_dependencies:
