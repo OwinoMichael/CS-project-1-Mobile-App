@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 
 class Tiling extends StatefulWidget {
-  static const String idScreen = "appliance";
+  static const String idScreen = "tiling";
 
   @override
   _TilingState createState() => _TilingState();
@@ -45,7 +45,10 @@ class _TilingState extends State<Tiling> {
                 padding: const EdgeInsets.all(15),
                 color: Colors.deepPurple,
                 textColor: Colors.white,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, MapView.idScreen, (route) => false);
+                },
               ),
             ],
           ),

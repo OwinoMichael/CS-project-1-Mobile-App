@@ -17,7 +17,10 @@ import 'package:prdip/screens/cl%20user%20screens/ServiceList/paintjob.dart';
 import 'package:prdip/screens/cl%20user%20screens/ServiceList/plumbing.dart';
 import 'package:prdip/screens/cl%20user%20screens/ServiceList/tiling.dart';
 import 'package:prdip/screens/cl%20user%20screens/ServiceList/woodwork.dart';
+import 'package:prdip/screens/cl%20user%20screens/home_screen.dart';
+import 'package:prdip/screens/cl%20user%20screens/orders_screen.dart';
 import 'package:prdip/screens/cl%20user%20screens/search_screen.dart';
+import 'package:prdip/screens/cl%20user%20screens/userProfile_screen.dart';
 import 'package:provider/provider.dart';
 import './screens/cl auth screens/Registration_screen.dart';
 import './screens/cl auth screens/getting_started_screen.dart';
@@ -90,7 +93,11 @@ class MyApp extends StatelessWidget {
           PaintJob.idScreen: (context) => PaintJob(),
           Tiling.idScreen: (context) => Tiling(),
           Woodwork.idScreen: (context) => Woodwork(),
-          PlumberMap.idScreen: (context) => PlumberMap(),
+          MapView.idScreen: (context) => MapView(),
+          HomeScreen.idScreen: (context) => HomeScreen(),
+          OrderScreen.idScreen: (context) => OrderScreen(),
+          UserProfile.idScreen: (context) => UserProfile(),
+          
     
         }
       )

@@ -45,7 +45,10 @@ class _GlassworkState extends State<Glasswork> {
                 padding: const EdgeInsets.all(15),
                 color: Colors.deepPurple,
                 textColor: Colors.white,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, MapView.idScreen, (route) => false);
+                },
               ),
             ],
           ),

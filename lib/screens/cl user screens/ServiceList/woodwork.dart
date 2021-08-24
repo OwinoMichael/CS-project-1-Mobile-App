@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 
 class Woodwork extends StatefulWidget {
-  static const String idScreen = "appliance";
+  static const String idScreen = "wood";
 
   @override
   _WoodworkState createState() => _WoodworkState();
@@ -45,7 +45,10 @@ class _WoodworkState extends State<Woodwork> {
                 padding: const EdgeInsets.all(15),
                 color: Colors.deepPurple,
                 textColor: Colors.white,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, MapView.idScreen, (route) => false);
+                },
               ),
             ],
           ),

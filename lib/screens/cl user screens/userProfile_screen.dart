@@ -15,6 +15,7 @@ import 'package:prdip/model/UserModel.dart' as u;
 import 'package:prdip/screens/cl user screens/home_screen.dart';
 
 class UserProfile extends StatefulWidget {
+  static const String idScreen = "profile";
   const UserProfile({Key? key, this.user}) : super(key: key);
   final u.User? user;
 

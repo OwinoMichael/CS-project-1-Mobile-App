@@ -48,7 +48,8 @@ class _ApplianceState extends State<Appliance> {
                 color: Colors.deepPurple,
                 textColor: Colors.white,
                 onPressed: () {
-                  
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, MapView.idScreen, (route) => false);
                 },
               ),
 

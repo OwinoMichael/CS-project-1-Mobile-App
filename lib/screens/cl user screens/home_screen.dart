@@ -2,9 +2,18 @@ import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:prdip/screens/cl%20user%20screens/ServiceList/appliance.dart';
+import 'package:prdip/screens/cl%20user%20screens/ServiceList/electrical.dart';
+import 'package:prdip/screens/cl%20user%20screens/ServiceList/glasswork.dart';
+import 'package:prdip/screens/cl%20user%20screens/ServiceList/metalwork.dart';
+import 'package:prdip/screens/cl%20user%20screens/ServiceList/paintjob.dart';
+import 'package:prdip/screens/cl%20user%20screens/ServiceList/plumbing.dart';
+import 'package:prdip/screens/cl%20user%20screens/ServiceList/tiling.dart';
+import 'package:prdip/screens/cl%20user%20screens/ServiceList/woodwork.dart';
 
 class HomeScreen extends StatefulWidget {
 
+ static const String idScreen = "homie";
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -54,6 +63,10 @@ class _HomeScreenState extends State<HomeScreen> {
             
             items: [
               GestureDetector(
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                        context, Plumbing.idScreen, (route) => false);
+                },
                 child:  Container(
                     height: 180,
                     width: 360,
@@ -84,9 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
               ),
-              onTap: () {
-                print("Hey there",); 
-              },
               ),
 
               GestureDetector(child:  Container(
@@ -120,8 +130,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               onTap: () {
-                print("Hey there",); 
-              },
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, Electrical.idScreen, (route) => false);
+                  },
               ),
 
               GestureDetector(child: Container(
@@ -155,8 +166,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               onTap: () {
-                print("Hey there",); 
-              },
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, Woodwork.idScreen, (route) => false);
+                  },
               ), 
 
 
@@ -191,8 +203,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               onTap: () {
-                print("Hey there",); 
-              },
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, Appliance.idScreen, (route) => false);
+                  },
               ),
 
 
@@ -264,8 +277,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               onTap: () {
-                print("Hey there",); 
-              },
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, PaintJob.idScreen, (route) => false);
+                  },
               ),
 
               GestureDetector(child:  Container(
@@ -299,8 +313,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               onTap: () {
-                print("Hey there",); 
-              },
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, Tiling.idScreen, (route) => false);
+                  },
               ),
 
               GestureDetector( child:  Container(
@@ -334,8 +349,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               onTap: () {
-                print("Hey there",); 
-              },
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, Metalwork.idScreen, (route) => false);
+                  },
               ),
 
 
@@ -371,8 +387,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               onTap: () {
-                print("Hey there",);  
-              },
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, Glasswork.idScreen, (route) => false);
+                  },
               ), 
 
 

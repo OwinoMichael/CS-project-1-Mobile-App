@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class  OrderScreen extends StatefulWidget {
+  static const String idScreen = "oderrr";
   const  OrderScreen({Key? key}) : super(key: key);
 
   @override

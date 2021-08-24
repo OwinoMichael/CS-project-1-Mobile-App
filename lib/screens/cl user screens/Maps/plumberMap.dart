@@ -9,26 +9,32 @@ import 'package:prdip/Assistants/assistantMethods.dart';
 import 'package:prdip/Assistants/requestAssistant.dart';
 import 'package:prdip/DataHandler/appData.dart';
 import 'package:prdip/model/address.dart';
+import 'package:prdip/screens/cl%20auth%20screens/main_screen.dart';
 import 'package:prdip/screens/cl%20user%20screens/Maps/search_map.dart';
+import 'package:prdip/screens/cl%20user%20screens/home_screen.dart';
+import 'package:prdip/screens/cl%20user%20screens/orders_screen.dart';
+import 'package:prdip/screens/cl%20user%20screens/search_screen.dart';
+import 'package:prdip/screens/cl%20user%20screens/userProfile_screen.dart';
 import 'package:prdip/widgets/Divider.dart';
 import 'package:prdip/widgets/progressDialog.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 
 import 'configMaps.dart';
 
-class PlumberMap extends StatefulWidget {
+class MapView extends StatefulWidget {
 
-  static const String idScreen = "plumbingMap";
-  const PlumberMap({ Key? key }) : super(key: key);
+  static const String idScreen = "mapview";
+  const MapView({ Key? key }) : super(key: key);
 
   @override
-  _PlumberMapState createState() => _PlumberMapState();
+  _MapViewState createState() => _MapViewState();
 }
 
-class _PlumberMapState extends State<PlumberMap> with TickerProviderStateMixin {
+class _MapViewState extends State<MapView> with TickerProviderStateMixin {
 
   
   final items = [
@@ -54,6 +60,7 @@ class _PlumberMapState extends State<PlumberMap> with TickerProviderStateMixin {
   Set<Circle> circlesSet = {};
 
   double rideDetailsContainer = 0;
+  double rideRequestContainer = 0;
   double searchContainerHeight = 260.0;
   void displayRideDetailsContainer() async {
 
@@ -62,6 +69,22 @@ class _PlumberMapState extends State<PlumberMap> with TickerProviderStateMixin {
     setState(() {
       searchContainerHeight = 0;
       rideDetailsContainer = 240;
+      bottomPaddingOfMap = 270;
+    });
+  }
+  void displayRequestRideContainer(){
+    setState(() {
+      rideRequestContainer = 274.0;
+      rideDetailsContainer = 0;
+       bottomPaddingOfMap = 270;
+    });
+  }
+
+  resetApp(){
+    setState(() {
+      searchContainerHeight = 260;
+      rideDetailsContainer = 0;
+      rideRequestContainer = 0;
       bottomPaddingOfMap = 270;
     });
   }
@@ -91,6 +114,31 @@ class _PlumberMapState extends State<PlumberMap> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+
+    const colorizeColors = [
+      Colors.green,
+      Colors.purple,
+      Colors.pink,
+      Colors.blue,
+      Colors.yellow,
+      Colors.red,
+      Colors.orange,
+      Colors.blue,
+      Colors.brown,
+      Colors.black,
+      Colors.cyan,
+      Colors.amber,
+      Colors.lime,
+      Colors.teal,
+
+    ];
+
+    const colorizeTextStyle = TextStyle(
+      fontSize: 50.0,
+      fontFamily: 'Horizon',
+      //fontFamily: 'Signatra',
+      
+    );
      
 
     return Scaffold(
@@ -130,29 +178,53 @@ class _PlumberMapState extends State<PlumberMap> with TickerProviderStateMixin {
 
               SizedBox(height: 12.0,),
 
-              ListTile(
-                leading: Icon(Icons.home),
-                title: Text("Home", style: TextStyle(fontSize: 15.0),),
-              ),
-              ListTile(
-                leading: Icon(Icons.plumbing),
-                title: Text(
-                  "Plumber List",
-                  style: TextStyle(fontSize: 15.0),
+              GestureDetector(
+                onTap: (){
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, MainScreen.idScreen, (route) => false);
+                },
+                child: ListTile(
+                  leading: Icon(Icons.home),
+                  title: Text("Home", style: TextStyle(fontSize: 15.0),),
                 ),
               ),
-              ListTile(
-                leading: Icon(Icons.search),
-                title: Text(
-                  "Find",
-                  style: TextStyle(fontSize: 15.0),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(context, (route) => false)(
+                      context, UserProfile.idScreen, (route) => false);
+                },
+                child: ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text(
+                    "User Profile",
+                    style: TextStyle(fontSize: 15.0),
+                  ),
                 ),
               ),
-              ListTile(
-                leading: Icon(Icons.history),
-                title: Text(
-                  "History",
-                  style: TextStyle(fontSize: 15.0),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, SearchScreen.idScreen, (route) => false);
+                },
+                child: ListTile(
+                  leading: Icon(Icons.search),
+                  title: Text(
+                    "Find",
+                    style: TextStyle(fontSize: 15.0),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, OrderScreen.idScreen, (route) => false);
+                },
+                child: ListTile(
+                  leading: Icon(Icons.history),
+                  title: Text(
+                    "History",
+                    style: TextStyle(fontSize: 15.0),
+                  ),
                 ),
               ),
             ],
@@ -463,7 +535,9 @@ class _PlumberMapState extends State<PlumberMap> with TickerProviderStateMixin {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.0,),
                         child: RaisedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            displayRequestRideContainer();
+                          },
                           color:  Colors.deepPurple,
                           child: Padding(
                             padding: EdgeInsets.all(17.0), 
@@ -485,6 +559,90 @@ class _PlumberMapState extends State<PlumberMap> with TickerProviderStateMixin {
             ),
 
           ),
+          
+          Positioned(
+            bottom: 0.0,left: 0.0, right: 0.0,
+      
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0),),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    spreadRadius: 0.5,
+                    blurRadius: 16.0,
+                    color: Colors.black54,
+                    offset: Offset(07, 07),
+                  )
+                ],
+              ),
+              height: rideRequestContainer,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    SizedBox(height: 12.0,),
+          
+                          
+                     SizedBox(
+                      width: double.infinity,
+                      child: AnimatedTextKit(
+                        animatedTexts: [
+                          ColorizeAnimatedText(                       
+                            'Requesting a service...',
+                            textStyle: colorizeTextStyle,
+                            textAlign: TextAlign.center,
+                            colors: colorizeColors,
+                          ),
+                          ColorizeAnimatedText(
+                            'Please wait....',
+                            textStyle: colorizeTextStyle,
+                            textAlign: TextAlign.center,
+                            colors: colorizeColors,
+                          ),
+                          ColorizeAnimatedText(
+                            'Finding a Handyman....',
+                            textStyle: colorizeTextStyle,
+                            textAlign: TextAlign.center,
+                            colors: colorizeColors,
+                          ),
+                          ],
+                          isRepeatingAnimation: true,
+                          onTap: () {
+                            print("Tap Event");
+                          },
+                            ),
+                     ),
+
+                     SizedBox(
+                      height: 18.0,
+                    ),
+                      Container(
+                        height: 60.0,
+                        width: 60.0,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(26.0),
+                          border: Border.all(width: 2.0, color: Colors.grey),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            resetApp();
+                          },
+                          child: Icon(Icons.close, size: 26.0))
+                      ),
+                      SizedBox(
+                      height: 7.0,
+                        ),
+                      Container(
+                        width: double.infinity,
+                        child: Text("Cancel", textAlign: TextAlign.center, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
