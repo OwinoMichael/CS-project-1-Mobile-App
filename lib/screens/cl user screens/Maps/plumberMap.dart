@@ -55,6 +55,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   late Position currentPosition;
   var geoLocator = Geolocator();
   double bottomPaddingOfMap = 0;
+  double topPaddingOfMap = 0;
 
   Set<Marker> markersSet = {};
   Set<Circle> circlesSet = {};
@@ -70,6 +71,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
       searchContainerHeight = 0;
       rideDetailsContainer = 240;
       bottomPaddingOfMap = 270;
+      double topPaddingOfMap = 30;
     });
   }
   void displayRequestRideContainer(){
@@ -190,8 +192,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(context, (route) => false)(
-                      context, UserProfile.idScreen, (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, MainScreen.idScreen, (route) => false);
                 },
                 child: ListTile(
                   leading: Icon(Icons.person),
@@ -235,7 +237,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
       body: Stack(
         children: [
           GoogleMap(
-            padding: EdgeInsets.only(bottom: bottomPaddingOfMap),
+            padding: EdgeInsets.only(bottom: bottomPaddingOfMap, top: topPaddingOfMap),
             mapType: MapType.normal,
             myLocationButtonEnabled: true,
             initialCameraPosition: _kLake,
@@ -252,6 +254,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
 
               setState(() {
                 bottomPaddingOfMap = 270.0;
+                topPaddingOfMap = 30;
               });
 
               locatePosition();
@@ -774,3 +777,55 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     );
 
 }
+
+class Handymen{
+  String ? id;
+  double ? lat;
+  double ? lon;
+  String ? service;
+  String ? name;
+  
+  Handymen({this.id, this.lat, this.lon, this.service, this.name});
+
+  factory Handymen.fromJson(Map<String, dynamic> json) => Handymen(
+      id: json['id'],
+      lat: json['lat'],
+      lon: json['lon'],
+      service: json['service']);
+}
+
+class Demo {
+  final double range = 500;
+
+  String service = 'plumber';
+  double nowlat = 0;
+  double nowLon = 0; // users current location
+
+  List<Handymen> handyMen = [Handymen()]; //! from db
+
+  List<Handymen> availableMen = []; //! availble;
+
+  getAvailble() {
+    handyMen.forEach((man) {
+      double d = calculateDistance(
+          clientsLat: nowlat,
+          clientLon: nowLon,
+          handymanLat: man.lat,
+          handymanLon: man.lon);
+      if (d <= range) {
+        availableMen.add(man);
+      }
+    });
+  }
+
+  filterHandmen() {
+    List<Handymen> filtered =
+        availableMen.where((element) => element.service == service).toList();
+
+    if (filtered.isEmpty) {
+      //! tell client no available handy men
+    } else {}
+  }
+}
+
+
