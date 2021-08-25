@@ -135,6 +135,16 @@ class _SidebarState extends State<Sidebar> with SingleTickerProviderStateMixin<S
                             }
                           ),
                           MenuItem(
+                            icon: Icons.map,
+                            title: "Map",
+                            onTap: () {
+                              onIconPressed();
+                              BlocProvider.of<NavigationBloc>(context).add(
+                                  NavigationEvents.MapViewClikedEvent);
+                              
+                            }
+                          ),
+                          MenuItem(
                             icon: Icons.person,
                             title: "My Account",
                             onTap: () {
