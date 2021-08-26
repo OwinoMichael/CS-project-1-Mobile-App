@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:math';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,6 +11,7 @@ import 'package:prdip/Assistants/assistantMethods.dart';
 import 'package:prdip/Assistants/requestAssistant.dart';
 import 'package:prdip/DataHandler/appData.dart';
 import 'package:prdip/model/address.dart';
+import 'package:prdip/model/handymanData.dart';
 import 'package:prdip/screens/cl%20auth%20screens/main_screen.dart';
 import 'package:prdip/screens/cl%20user%20screens/Maps/search_map.dart';
 import 'package:prdip/screens/cl%20user%20screens/home_screen.dart';
@@ -63,6 +66,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   double rideDetailsContainer = 0;
   double rideRequestContainer = 0;
   double searchContainerHeight = 260.0;
+
+
   void displayRideDetailsContainer() async {
 
     await getPlaceDirection();
@@ -105,6 +110,103 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
    String address = await AssitantMethods.searchCoordinateAddress(position, context);
     print("This is your Address :: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX---------***********************%%??????????????????????@@@@@@@@@@" + address);
   }
+
+  //********************************************************* */
+
+  final double range = 500;
+
+  double nowlat = 0;
+  double nowLon = 0; // users current location
+
+  getCurrentLocation() async { //fetch users current location
+    final geoposition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    nowlat = geoposition.latitude;
+    nowLon = geoposition.longitude;
+  }
+
+  String service = 'plumber'; //////
+  
+  final spHandy = FirebaseDatabase(
+          databaseURL:
+              "https://prdip-2932d-default-rtdb.europe-west1.firebasedatabase.app/")
+      .reference()
+      .child("serviceProvider-users");
+
+  @override
+  void initState() {
+   
+    super.initState();
+    getAvailble();
+  }
+
+  void getHandymanData(){
+    spHandy.once().then((DataSnapshot snap){
+    var data=snap.value;
+     data.forEach((key, value){
+
+       Handymen handy = new Handymen(
+         Hid: value['id'],
+         name: value['name'],
+         contact: value['phone'],
+         lat: value['latitude'],
+         lon: value['longitude'],
+         servicepro: value['service'],
+        );
+      setState(() {
+        handyMen.add(handy);
+      });
+      });
+      getAvailble();
+    });
+  }
+
+  List<Handymen> handyMen = []; //! from db
+
+  List<Handymen> availableMen = []; //! availble;
+
+
+  double calculateDistance({clientsLat, clientLon, handymanLat, handymanLon}) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+       c((handymanLat - clientsLat) * p) / 2 +
+        c(clientsLat * p) *
+            c(handymanLat * p) *
+            (1 - c((handymanLon - clientLon) * p)) /
+            2;
+    return 12742 * asin(sqrt(a));
+  }
+
+  getAvailble() { // to fetchHandymen
+    handyMen.forEach((man) {
+      double d = calculateDistance(
+          clientsLat: nowlat,
+          clientLon: nowLon,
+          handymanLat: man.lat,
+          handymanLon: man.lon);
+      if (d <= range) {
+        availableMen.add(man);
+      }
+    });
+  }
+
+  List<Handymen> filtered = [];
+
+  filterHandmen() { //
+   setState(() {
+     filtered = availableMen
+          .where((element) => element.servicepro == service)
+          .toList();
+
+      if (filtered.isEmpty) {
+        //! tell client no available handy men
+      } else {}
+   });
+  }
+
+  //*************************************************************************** */
 
   static final CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
@@ -411,34 +513,6 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                         height: 10.0,
                       ),
             
-            
-                      // Row(
-                      //   children: [
-                      //     Icon(
-                      //       Icons.house,
-                      //       color: Colors.grey,
-                      //     ),
-                      //     SizedBox(
-                      //       height: 12.0,
-                      //     ),
-                      //     Column(
-                      //       crossAxisAlignment: CrossAxisAlignment.start,
-                      //       children: [
-                      //         Text("Add another house location"),
-                      //         SizedBox(
-                      //           height: 4.0,
-                      //         ),
-                      //         Text(
-                      //           "Any other house address",
-                      //           style: TextStyle(
-                      //               color: Colors.black54, fontSize: 12.0),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ],
-                      // ),
-            
-            
                     ],
                     ),
                 ),
@@ -525,7 +599,11 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                               iconSize: 26,
                               icon: Icon(Icons.keyboard_arrow_down, color: Colors.black),
                               items: items.map(buildMenuItem).toList(),
-                              onChanged: (value) => this.value = value,
+                              onChanged: (value) {
+                                setState(() {
+                                  service = value!;
+                                });
+                              },
                             ),
                             // SizedBox(width: 6.0,),
                             // Icon(Icons.keyboard_arrow_down, color: Colors.black),
@@ -778,54 +856,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
 
 }
 
-class Handymen{
-  String ? id;
-  double ? lat;
-  double ? lon;
-  String ? service;
-  String ? name;
-  
-  Handymen({this.id, this.lat, this.lon, this.service, this.name});
 
-  factory Handymen.fromJson(Map<String, dynamic> json) => Handymen(
-      id: json['id'],
-      lat: json['lat'],
-      lon: json['lon'],
-      service: json['service']);
-}
 
-class Demo {
-  final double range = 500;
-
-  String service = 'plumber';
-  double nowlat = 0;
-  double nowLon = 0; // users current location
-
-  List<Handymen> handyMen = [Handymen()]; //! from db
-
-  List<Handymen> availableMen = []; //! availble;
-
-  getAvailble() {
-    handyMen.forEach((man) {
-      double d = calculateDistance(
-          clientsLat: nowlat,
-          clientLon: nowLon,
-          handymanLat: man.lat,
-          handymanLon: man.lon);
-      if (d <= range) {
-        availableMen.add(man);
-      }
-    });
-  }
-
-  filterHandmen() {
-    List<Handymen> filtered =
-        availableMen.where((element) => element.service == service).toList();
-
-    if (filtered.isEmpty) {
-      //! tell client no available handy men
-    } else {}
-  }
-}
 
 

@@ -42,7 +42,7 @@ void main() async
   );
 }
 //Warning!!!! If you set the database location outside the default location i.e. USA, please give the URL instead of instance
- DatabaseReference userRef = FirebaseDatabase(databaseURL: "https://prdip-2932d-default-rtdb.europe-west1.firebasedatabase.app/").reference().child("client-users");
+ //DatabaseReference userRef = FirebaseDatabase(databaseURL: "https://prdip-2932d-default-rtdb.europe-west1.firebasedatabase.app/").reference().child("client-users");
  DatabaseReference spRef = FirebaseDatabase(databaseURL: "https://prdip-2932d-default-rtdb.europe-west1.firebasedatabase.app/").reference().child("serviceProvider-users");
 
 class MyApp extends StatelessWidget {
