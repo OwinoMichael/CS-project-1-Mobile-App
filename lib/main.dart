@@ -3,6 +3,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'Data/appData.dart';
 import 'screens/sp auth screens/Primary_screen.dart';
 import 'screens/sp auth screens/Sp_Login_screen.dart';
 import 'screens/sp auth screens/Sp_SignUp_screen.dart';
@@ -42,36 +44,40 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            textTheme:
-                GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
-            primarySwatch: Colors.deepPurple),
+    return ChangeNotifierProvider(
 
-        //home: GettingStartedScreen(),
-        home: FutureBuilder(
-            future: userAuth.fetchUser(),
-            builder: (context, AsyncSnapshot<User> snapShot) {
-              if (snapShot.connectionState == ConnectionState.waiting) {
-                return Splash();
-              } else {
-                if (snapShot.hasData) {
-                  return PrimaryScreen(
-                      //user: snapShot.data,
-                      );
+      create: (context) => AppData(),
+      child: MaterialApp(
+          title: 'Flutter Demo',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+              textTheme:
+                  GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+              primarySwatch: Colors.deepPurple),
+    
+          //home: GettingStartedScreen(),
+          home: FutureBuilder(
+              future: userAuth.fetchUser(),
+              builder: (context, AsyncSnapshot<User> snapShot) {
+                if (snapShot.connectionState == ConnectionState.waiting) {
+                  return Splash();
                 } else {
-                  return GettingStartedScreen();
+                  if (snapShot.hasData) {
+                    return PrimaryScreen(
+                        //user: snapShot.data,
+                        );
+                  } else {
+                    return GettingStartedScreen();
+                  }
                 }
-              }
-            }),
-        routes: {
-          //SpLoginScreen.routeName: (ctx) => SpLoginScreen(),
-          ForgotPasswordScreen.idScreen: (context) => ForgotPasswordScreen(),
-          SpLoginScreen.idScreen: (context) => SpLoginScreen(),
-          SpRegistrationScreen.idScreen: (context) => SpRegistrationScreen(),
-          PrimaryScreen.idScreen: (context) => PrimaryScreen(),
-        });
+              }),
+          routes: {
+            //SpLoginScreen.routeName: (ctx) => SpLoginScreen(),
+            ForgotPasswordScreen.idScreen: (context) => ForgotPasswordScreen(),
+            SpLoginScreen.idScreen: (context) => SpLoginScreen(),
+            SpRegistrationScreen.idScreen: (context) => SpRegistrationScreen(),
+            PrimaryScreen.idScreen: (context) => PrimaryScreen(),
+          }),
+    );
   }
 }
