@@ -40,9 +40,9 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              SizedBox(height: 35.0,),
+              SizedBox(height: 12.0,),
               Image(
-                image: AssetImage('./assets/images/image1.jpg'),
+                image: AssetImage('./assets/images/Icon1.jpg'),
                 width: 250.0,
                 height: 250.0,
                 alignment: Alignment.center,
@@ -66,6 +66,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                       prefixIcon: Icon(Icons.email),
+                      suffixIcon: IconButton(
+                        color: Colors.deepPurple,
+                        onPressed: () => emailTextEditingController.clear(), 
+                        icon: Icon(Icons.close),
+                      ),
                       labelText: "Email",
                       labelStyle: TextStyle(
                       fontSize: 20.0,

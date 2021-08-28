@@ -49,6 +49,7 @@ dependencies:
   provider: ^5.0.0
   flutter_polyline_points: ^1.0.0
   animated_text_kit: ^4.2.1
+  keyboard_dismisser: ^2.0.0
 
 
 dev_dependencies:
@@ -71,9 +72,6 @@ flutter:
   assets:
 
 #    - images/
-    - assets/images/image1.jpg
-    - assets/images/image2.jpg
-    - assets/images/image3.jpg
     - assets/images/handyman1.jpg
     - assets/images/plumbing.jpg
     - assets/images/electrical.jpg
@@ -83,6 +81,10 @@ flutter:
     - assets/images/tiler.jpg
     - assets/images/glasswork.jpg
     - assets/images/metalworks.jpg
+    - assets/images/Icon1.jpg
+    - assets/images/Slide1.jpg
+    - assets/images/Slide2.jpg
+    - assets/images/Slide3.jpg
 
     # - images/a_dot_ham.jpeg
 

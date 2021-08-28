@@ -14,15 +14,15 @@ class Slide {
 
 final slideList = [
   Slide(
-    imageUrl: 'assets/images/image1.jpg', 
-    title: 'This is our title', 
-    description: 'orem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'),
+    imageUrl: 'assets/images/Slide1.jpg', 
+    title: 'Introducing House Fix', 
+    description: 'Having trouble finding someone for house repairs? Worry Not, House Fix is here to help!!!'),
   Slide(
-    imageUrl: 'assets/images/image2.jpg', 
-    title: 'Welcome here', 
-    description: 'orem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'),
+    imageUrl: 'assets/images/Slide3.jpg', 
+    title: 'Urgent? We have you covered', 
+    description: 'House Fix is here to help you to locate the nearest available handyman to address your house repair issues'),
   Slide(
-    imageUrl: 'assets/images/image3.jpg', 
+    imageUrl: 'assets/images/Slide2.jpg', 
     title: 'Click to get started', 
-    description: 'orem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'),
+    description: 'House Fix links you quickly with our trusted Handymen assist to do repairs'),
 ];

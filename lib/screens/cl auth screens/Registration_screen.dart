@@ -55,7 +55,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   height: 25.0,
                 ),
                 Image(
-                  image: AssetImage('./assets/images/image1.jpg'),
+                  image: AssetImage('./assets/images/Icon1.jpg'),
                   width: 130.0,
                   height: 130.0,
                   alignment: Alignment.center,

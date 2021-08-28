@@ -126,7 +126,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     nowLon = geoposition.longitude;
   }
 
-  String service = 'plumber'; //////
+  String service = ""; //////
   
   final spHandy = FirebaseDatabase(
           databaseURL:
@@ -147,7 +147,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
      data.forEach((key, value){
 
        Handymen handy = new Handymen(
-         Hid: value['id'],
+         Htime: value['time'],
          name: value['name'],
          contact: value['phone'],
          lat: value['latitude'],
@@ -202,7 +202,12 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
 
       if (filtered.isEmpty) {
         //! tell client no available handy men
-      } else {}
+        print("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV&&&&&&&&&&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^");
+      } 
+      //else {
+      //   print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+      //   print(filtered);
+      // }
    });
   }
 
@@ -593,17 +598,21 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                           children: [
                             Icon(Icons.home_repair_service, size: 20.0),
                             SizedBox(width: 15),
-                            DropdownButton<String>(
-                              //hint: Text("Select Service"),
-                              value: value,
-                              iconSize: 26,
-                              icon: Icon(Icons.keyboard_arrow_down, color: Colors.black),
-                              items: items.map(buildMenuItem).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  service = value!;
-                                });
-                              },
+                            Container(
+                              width: 180,
+                              child: DropdownButton<String>(
+                                hint: Text("Select Service"),
+                                value: value,
+                                //isExpanded: true,
+                                iconSize: 40,
+                                icon: Icon(Icons.keyboard_arrow_down, color: Colors.black),
+                                items: items.map(buildMenuItem).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    service = value!;
+                                  });
+                                },
+                              ),
                             ),
                             // SizedBox(width: 6.0,),
                             // Icon(Icons.keyboard_arrow_down, color: Colors.black),
@@ -618,6 +627,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                         child: RaisedButton(
                           onPressed: () {
                             displayRequestRideContainer();
+                            filterHandmen();
                           },
                           color:  Colors.deepPurple,
                           child: Padding(
