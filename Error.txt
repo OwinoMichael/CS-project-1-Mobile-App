@@ -1,0 +1,7 @@
+Unhandled Exception: type 'String' is not a subtype of type 'double?'
+E/flutter (25959): #0      _MapViewState.getHandymanData.<anonymous closure>.<anonymous closure> (package:prdip/screens/cl%20user%20screens/Maps/plumberMap.dart:163:20)
+E/flutter (25959): #1      _LinkedHashMapMixin.forEach (dart:collection-patch/compact_hash.dart:397:8)
+E/flutter (25959): #2      _MapViewState.getHandymanData.<anonymous closure> (package:prdip/screens/cl%20user%20screens/Maps/plumberMap.dart:160:11)
+E/flutter (25959): #3      _rootRunUnary (dart:async/zone.dart:1362:47)
+E/flutter (25959): #4      _CustomZone.runUnary (dart:async/zone.dart:1265:19)
+E/flutter (25959): <asynchronous suspension>

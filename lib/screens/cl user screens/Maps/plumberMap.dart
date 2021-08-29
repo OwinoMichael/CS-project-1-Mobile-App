@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:prdip/Assistants/assistantMethods.dart';
@@ -25,26 +26,29 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
-
 import 'configMaps.dart';
 
 class MapView extends StatefulWidget {
-
   static const String idScreen = "mapview";
-  const MapView({ Key? key }) : super(key: key);
+  const MapView({Key? key}) : super(key: key);
 
   @override
   _MapViewState createState() => _MapViewState();
 }
 
 class _MapViewState extends State<MapView> with TickerProviderStateMixin {
-
-  
   final items = [
-    "Plumbing","Electrical","Tiling","Woodwork","Glasswork","Paint Job","Metalworks"];
-  String ? value;
+    "Plumbing",
+    "Electrical",
+    "Tiling",
+    "Woodwork",
+    "Glasswork",
+    "Paint Job",
+    "Metalworks"
+  ];
+  String? value;
 
-  String ? brz;
+  String? brz;
 
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
 
@@ -66,10 +70,9 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   double rideDetailsContainer = 0;
   double rideRequestContainer = 0;
   double searchContainerHeight = 260.0;
-
+  double handymanDetailsContainer = 0;
 
   void displayRideDetailsContainer() async {
-
     await getPlaceDirection();
 
     setState(() {
@@ -79,55 +82,78 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
       double topPaddingOfMap = 30;
     });
   }
-  void displayRequestRideContainer(){
+
+  displayRequestRideContainer() {
     setState(() {
       rideRequestContainer = 274.0;
       rideDetailsContainer = 0;
-       bottomPaddingOfMap = 270;
+      bottomPaddingOfMap = 270;
     });
   }
 
-  resetApp(){
+  Future displayHandymanDetailsContainer() async {
+    await filterHandmen();
+
     setState(() {
-      searchContainerHeight = 260;
+      handymanDetailsContainer = 274;
+      searchContainerHeight = 0;
       rideDetailsContainer = 0;
       rideRequestContainer = 0;
       bottomPaddingOfMap = 270;
     });
   }
 
-  String ? address;
-  
+  resetApp() {
+    setState(() {
+      searchContainerHeight = 260;
+      rideDetailsContainer = 0;
+      rideRequestContainer = 0;
+      handymanDetailsContainer = 0;
+      bottomPaddingOfMap = 270;
+    });
+  }
+
+  String? address;
+
   void locatePosition() async {
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     currentPosition = position;
 
     LatLng latLatPosition = LatLng(position.latitude, position.longitude);
 
-    CameraPosition cameraPosition = new CameraPosition(target: latLatPosition, zoom: 14);
-    NewGoogleMapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    CameraPosition cameraPosition =
+        new CameraPosition(target: latLatPosition, zoom: 14);
+    NewGoogleMapController.animateCamera(
+        CameraUpdate.newCameraPosition(cameraPosition));
 
-   String address = await AssitantMethods.searchCoordinateAddress(position, context);
-    print("This is your Address :: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX---------***********************%%??????????????????????@@@@@@@@@@" + address);
+    String address =
+        await AssitantMethods.searchCoordinateAddress(position, context);
+    print(
+        "This is your Address :: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX---------***********************%%??????????????????????@@@@@@@@@@" +
+            address);
   }
 
   //********************************************************* */
 
-  final double range = 500;
+  final double range = 1500;
 
-  double nowlat = 0;
-  double nowLon = 0; // users current location
+  double? nowlat;
+  double? nowLon; // users current location
 
-  getCurrentLocation() async { //fetch users current location
+  getCurrentLocation() async {
+    //fetch users current location
     final geoposition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
-    nowlat = geoposition.latitude;
-    nowLon = geoposition.longitude;
+    setState(() {
+      nowlat = geoposition.latitude;
+      nowLon = geoposition.longitude;
+    });
   }
 
-  String service = ""; //////
-  
+  String service = "plumbing"; //////
+
   final spHandy = FirebaseDatabase(
           databaseURL:
               "https://prdip-2932d-default-rtdb.europe-west1.firebasedatabase.app/")
@@ -136,27 +162,32 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
 
   @override
   void initState() {
-   
     super.initState();
+    getCurrentLocation();
     getAvailble();
+    getHandymanData();
   }
 
-  void getHandymanData(){
-    spHandy.once().then((DataSnapshot snap){
-    var data=snap.value;
-     data.forEach((key, value){
-
-       Handymen handy = new Handymen(
-         Htime: value['time'],
-         name: value['name'],
-         contact: value['phone'],
-         lat: value['latitude'],
-         lon: value['longitude'],
-         servicepro: value['service'],
+  void getHandymanData() {
+    spHandy.once().then((DataSnapshot snap) {
+      var data = snap.value;
+      handyMen.clear();
+      data.forEach((key, value) {
+        Handymen handy = new Handymen(
+          Htime: value['time'],
+          lat: value['latitude'],
+          lon: value['longitude'],
+          servicepro: value['service'],
+          name: value['name'],
+          contact: value['phone'],
         );
-      setState(() {
-        handyMen.add(handy);
-      });
+        setState(() {
+          handyMen.add(handy);
+          print(
+              "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+          print(handyMen);
+          print(key);
+        });
       });
       getAvailble();
     });
@@ -164,14 +195,19 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
 
   List<Handymen> handyMen = []; //! from db
 
-  List<Handymen> availableMen = []; //! availble;
+  // var handyMen = nullableList;
+  // var index = 0;
+  // if (handyMen != null && handyMen.length > index) {
+  //   handyMen[index]; // You can safely access the element here.
+  // }
 
+  List<Handymen> availableMen = []; //! availble;
 
   double calculateDistance({clientsLat, clientLon, handymanLat, handymanLon}) {
     var p = 0.017453292519943295;
     var c = cos;
     var a = 0.5 -
-       c((handymanLat - clientsLat) * p) / 2 +
+        c((handymanLat - clientsLat) * p) / 2 +
         c(clientsLat * p) *
             c(handymanLat * p) *
             (1 - c((handymanLon - clientLon) * p)) /
@@ -179,7 +215,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     return 12742 * asin(sqrt(a));
   }
 
-  getAvailble() { // to fetchHandymen
+  getAvailble() {
+    // to fetchHandymen
     handyMen.forEach((man) {
       double d = calculateDistance(
           clientsLat: nowlat,
@@ -187,28 +224,42 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
           handymanLat: man.lat,
           handymanLon: man.lon);
       if (d <= range) {
+        // if(availableMen == []){
+        //   displayToastMessage(
+        //       "Handyman for requested service not found", context);
+        // }
         availableMen.add(man);
+        print(
+            "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
+        print(availableMen);
       }
+      print(
+          "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
+      print(nowlat);
+      print(nowLon);
     });
   }
 
   List<Handymen> filtered = [];
 
-  filterHandmen() { //
-   setState(() {
-     filtered = availableMen
+  Future filterHandmen() async {
+    //
+    setState(() {
+      filtered = availableMen
           .where((element) => element.servicepro == service)
           .toList();
 
       if (filtered.isEmpty) {
         //! tell client no available handy men
-        print("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV&&&&&&&&&&&&&&&&&&&&^^^^^^^^^^^^^^^^^^^^^^^");
-      } 
-      //else {
-      //   print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-      //   print(filtered);
-      // }
-   });
+        displayToastMessage(
+            "Handyman for requested service not found", context);
+      } else {
+        print(
+            "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+         print(filtered[1].contact);
+        //print(filtered);
+      }
+    });
   }
 
   //*************************************************************************** */
@@ -216,14 +267,11 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   static final CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
       target: LatLng(-1.2833333, 36.8166667),
-      
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
 
-
   @override
   Widget build(BuildContext context) {
-
     const colorizeColors = [
       Colors.green,
       Colors.purple,
@@ -239,26 +287,22 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
       Colors.amber,
       Colors.lime,
       Colors.teal,
-
     ];
 
     const colorizeTextStyle = TextStyle(
       fontSize: 50.0,
       fontFamily: 'Horizon',
       //fontFamily: 'Signatra',
-      
     );
-     
 
     return Scaffold(
       key: scaffoldKey,
-
       drawer: Container(
         color: Colors.white,
         width: 255.0,
         child: Drawer(
           child: ListView(
-            children:[
+            children: [
               Container(
                 height: 165.0,
                 child: DrawerHeader(
@@ -268,33 +312,42 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                   child: Row(
                     children: [
                       //Image.asset('assets\images\handyman1.jpg', height: 60.0, width: 60.0),
-                      SizedBox(width: 16.0,),
+                      SizedBox(
+                        width: 16.0,
+                      ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('John Doe', style: TextStyle(fontSize: 16.0, fontFamily: "Brand-Bold"),),
-                          SizedBox(height: 16.0,),
+                          Text(
+                            'John Doe',
+                            style: TextStyle(
+                                fontSize: 16.0, fontFamily: "Brand-Bold"),
+                          ),
+                          SizedBox(
+                            height: 16.0,
+                          ),
                           Text("Visit Profile"),
                         ],
                       ),
                     ],
                   ),
-
                 ),
               ),
-
               DividerWidget(),
-
-              SizedBox(height: 12.0,),
-
+              SizedBox(
+                height: 12.0,
+              ),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   Navigator.pushNamedAndRemoveUntil(
                       context, MainScreen.idScreen, (route) => false);
                 },
                 child: ListTile(
                   leading: Icon(Icons.home),
-                  title: Text("Home", style: TextStyle(fontSize: 15.0),),
+                  title: Text(
+                    "Home",
+                    style: TextStyle(fontSize: 15.0),
+                  ),
                 ),
               ),
               GestureDetector(
@@ -337,14 +390,14 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 ),
               ),
             ],
-
           ),
         ),
       ),
       body: Stack(
         children: [
           GoogleMap(
-            padding: EdgeInsets.only(bottom: bottomPaddingOfMap, top: topPaddingOfMap),
+            padding: EdgeInsets.only(
+                bottom: bottomPaddingOfMap, top: topPaddingOfMap),
             mapType: MapType.normal,
             myLocationButtonEnabled: true,
             initialCameraPosition: _kLake,
@@ -354,8 +407,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
             polylines: polylineSet,
             markers: markersSet,
             circles: circlesSet,
-            onMapCreated: (GoogleMapController controller){
-
+            onMapCreated: (GoogleMapController controller) {
               _controllerGoogleMap.complete(controller);
               NewGoogleMapController = controller;
 
@@ -366,7 +418,6 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
 
               locatePosition();
             },
-
           ),
 
           //Hamburger button
@@ -384,18 +435,15 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                   borderRadius: BorderRadius.circular(22.0),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 6.0,
-                      spreadRadius: 0.5,
-                      offset: Offset(
-                        0.7,
-                        0.7,
-                      )
-                    )
+                        color: Colors.black,
+                        blurRadius: 6.0,
+                        spreadRadius: 0.5,
+                        offset: Offset(
+                          0.7,
+                          0.7,
+                        ))
                   ],
-                      
                 ),
-            
                 child: CircleAvatar(
                   backgroundColor: Colors.white,
                   child: Icon(Icons.menu),
@@ -420,7 +468,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(18.0),
                     topRight: Radius.circular(18.0),
-                    ),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black,
@@ -431,27 +479,39 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0, vertical: 18.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 0.6,),
-                      Text("Hi, there", style: TextStyle(fontSize: 12.0),),
+                      SizedBox(
+                        height: 0.6,
+                      ),
+                      Text(
+                        "Hi, there",
+                        style: TextStyle(fontSize: 12.0),
+                      ),
                       Text(
                         "Which location for repair?",
-                        style: TextStyle(fontSize: 20.0, fontFamily: "Brand-Bold",),
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontFamily: "Brand-Bold",
+                        ),
                       ),
                       SizedBox(
                         height: 20.0,
                       ),
-                        GestureDetector(
-                          onTap: () async {
-                           var res = await Navigator.push(context, MaterialPageRoute(builder: (context) => SearchMap()));
-            
-                           if(res == "obtainDirection"){
-                             displayRideDetailsContainer();
-                           }
-                          },
+                      GestureDetector(
+                        onTap: () async {
+                          var res = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SearchMap()));
+
+                          if (res == "obtainDirection") {
+                            displayRideDetailsContainer();
+                          }
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -468,13 +528,18 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Row(
-                            children: [
-                              Icon(Icons.search, color: Colors.blueAccent,),
-                              SizedBox(width: 10.0,),
-                              Text("Search location for service"),
-                            ],
+                              children: [
+                                Icon(
+                                  Icons.search,
+                                  color: Colors.blueAccent,
+                                ),
+                                SizedBox(
+                                  width: 10.0,
+                                ),
+                                Text("Search location for service"),
+                              ],
                             ),
-                            ),
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -482,7 +547,10 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                       ),
                       Row(
                         children: [
-                          Icon(Icons.home, color: Colors.grey,),
+                          Icon(
+                            Icons.home,
+                            color: Colors.grey,
+                          ),
                           SizedBox(
                             height: 12.0,
                           ),
@@ -491,39 +559,38 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                             children: [
                               Text(
                                 //"Home"
-                                  Provider.of<AppData>(context).pickUpLocation != null ?
-                                  Provider.of<AppData>(context).pickUpLocation!.placeName:  "Error" ,
-                                 
-                                    
-                                   
+                                Provider.of<AppData>(context).pickUpLocation !=
+                                        null
+                                    ? Provider.of<AppData>(context)
+                                        .pickUpLocation!
+                                        .placeName
+                                    : "Error",
                               ),
                               SizedBox(
                                 height: 4.0,
                               ),
-                              Text("Your living home address", style: TextStyle(color: Colors.black54, fontSize: 12.0),),
-            
+                              Text(
+                                "Your living home address",
+                                style: TextStyle(
+                                    color: Colors.black54, fontSize: 12.0),
+                              ),
                             ],
                           ),
                         ],
-                        ),
-            
-            
-                        SizedBox(
-                        height: 10.0,
                       ),
-            
-                      Divider(),
-            
                       SizedBox(
                         height: 10.0,
                       ),
-            
+                      Divider(),
+                      SizedBox(
+                        height: 10.0,
+                      ),
                     ],
-                    ),
+                  ),
                 ),
               ),
             ),
-            ),
+          ),
 
           Positioned(
             bottom: 0.0,
@@ -537,20 +604,22 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 height: rideDetailsContainer,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0) ),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16.0),
+                      topRight: Radius.circular(16.0)),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black,
                       blurRadius: 16.0,
                       spreadRadius: 0.5,
                       offset: Offset(0.7, 0.7),
-            
                     )
                   ],
                 ),
-            
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 17.0,),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 17.0,
+                  ),
                   child: Column(
                     children: [
                       Container(
@@ -560,38 +629,68 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                         child: Row(
                           children: [
                             // Image.asset(./assets/images/handyman1.jpg),
-                            SizedBox( width: 16.0),
+                            SizedBox(width: 16.0),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  Provider.of<AppData>(context).dropOffLocation !=
-                                          null
-                                      ? Provider.of<AppData>(context)
-                                          .dropOffLocation!
-                                          .placeName
-                                      : "Error",
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontFamily: "Brand-Bold",
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Current location: ",
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontFamily: "Brand-Bold",
+                                      ),
+                                    ),
+                                    Text(
+                                      Provider.of<AppData>(context)
+                                                  .dropOffLocation !=
+                                              null
+                                          ? Provider.of<AppData>(context)
+                                              .dropOffLocation!
+                                              .placeName
+                                          : "Error",
+                                      style: TextStyle(
+                                        color: Colors.redAccent,
+                                        fontSize: 18.0,
+                                        fontFamily: "Brand-Bold",
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  Provider.of<AppData>(context).pickUpLocation != null ?
-                                  Provider.of<AppData>(context).pickUpLocation!.placeName:  "Error" ,
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontFamily: "Brand-Bold",
-                                    color: Colors.grey,
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Repair location: ",
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontFamily: "Brand-Bold",
+                                      ),
+                                    ),
+                                    Text(
+                                      Provider.of<AppData>(context)
+                                                  .pickUpLocation !=
+                                              null
+                                          ? Provider.of<AppData>(context)
+                                              .pickUpLocation!
+                                              .placeName
+                                          : "Error",
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontFamily: "Brand-Bold",
+                                        color: Colors.deepOrange,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                           ],
-                          ),
+                          ],
+                        ),
                       ),
-                      SizedBox( height: 20.0,),
-            
+                      SizedBox(
+                        height: 20.0,
+                      ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20.0),
                         child: Row(
@@ -605,7 +704,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                                 value: value,
                                 //isExpanded: true,
                                 iconSize: 40,
-                                icon: Icon(Icons.keyboard_arrow_down, color: Colors.black),
+                                icon: Icon(Icons.keyboard_arrow_down,
+                                    color: Colors.black),
                                 items: items.map(buildMenuItem).toList(),
                                 onChanged: (value) {
                                   setState(() {
@@ -614,33 +714,97 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                                 },
                               ),
                             ),
-                            // SizedBox(width: 6.0,),
-                            // Icon(Icons.keyboard_arrow_down, color: Colors.black),
-            
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            //Icon(Icons.cancel_outlined),
                           ],
                         ),
                       ),
-            
-                      SizedBox(height: 24.0,),
+                      SizedBox(
+                        height: 24.0,
+                      ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0,),
-                        child: RaisedButton(
-                          onPressed: () {
-                            displayRequestRideContainer();
-                            filterHandmen();
-                          },
-                          color:  Colors.deepPurple,
-                          child: Padding(
-                            padding: EdgeInsets.all(17.0), 
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Request", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white ,),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                        ),
+                        child: Row(
+                          children: [
+                            RaisedButton(
+                              onPressed: () async {
+                                if (value == "") {
+                                  displayToastMessage(
+                                      "Please select a service !!!", context);
+                                } else {
+                                  await getHandymanLocationName();
+                                  await displayHandymanDetailsContainer();
+                                  await filterHandmen();
+                                  displayRequestRideContainer();
+                                }
+                              },
+                              color: Colors.deepPurple,
+                              child: Padding(
+                                padding: EdgeInsets.all(12.5),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Request",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 38,
+                                    ),
+                                    Icon(
+                                      Icons.handyman,
+                                      color: Colors.white,
+                                      size: 26.0,
+                                    ),
+                                  ],
                                 ),
-                                Icon(Icons.handyman, color: Colors.white, size: 26.0,),
-                              ],
+                              ),
                             ),
-                          ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            //Icon(Icons.cancel),
+                            RaisedButton(
+                              onPressed: () async {
+                                resetApp();
+                              },
+                              color: Colors.red,
+                              child: Padding(
+                                padding: EdgeInsets.all(12.5),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Cancel",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 3,
+                                    ),
+                                    Icon(
+                                      Icons.cancel,
+                                      color: Colors.white,
+                                      size: 26.0,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -648,15 +812,18 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 ),
               ),
             ),
-
           ),
-          
+
           Positioned(
-            bottom: 0.0,left: 0.0, right: 0.0,
-      
+            bottom: 0.0,
+            left: 0.0,
+            right: 0.0,
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0),),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0),
+                ),
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
@@ -672,14 +839,14 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: [
-                    SizedBox(height: 12.0,),
-          
-                          
-                     SizedBox(
+                    SizedBox(
+                      height: 12.0,
+                    ),
+                    SizedBox(
                       width: double.infinity,
                       child: AnimatedTextKit(
                         animatedTexts: [
-                          ColorizeAnimatedText(                       
+                          ColorizeAnimatedText(
                             'Requesting a service...',
                             textStyle: colorizeTextStyle,
                             textAlign: TextAlign.center,
@@ -697,18 +864,17 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                             textAlign: TextAlign.center,
                             colors: colorizeColors,
                           ),
-                          ],
-                          isRepeatingAnimation: true,
-                          onTap: () {
-                            print("Tap Event");
-                          },
-                            ),
-                     ),
-
-                     SizedBox(
+                        ],
+                        isRepeatingAnimation: true,
+                        onTap: () {
+                          print("Tap Event");
+                        },
+                      ),
+                    ),
+                    SizedBox(
                       height: 18.0,
                     ),
-                      Container(
+                    Container(
                         height: 60.0,
                         width: 60.0,
                         decoration: BoxDecoration(
@@ -717,58 +883,203 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                           border: Border.all(width: 2.0, color: Colors.grey),
                         ),
                         child: GestureDetector(
-                          onTap: () {
-                            resetApp();
-                          },
-                          child: Icon(Icons.close, size: 26.0))
-                      ),
-                      SizedBox(
+                            onTap: () {
+                              resetApp();
+                            },
+                            child: Icon(Icons.close, size: 26.0))),
+                    SizedBox(
                       height: 7.0,
-                        ),
-                      Container(
-                        width: double.infinity,
-                        child: Text("Cancel", textAlign: TextAlign.center, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: Text(
+                        "Cancel",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 17.0, fontWeight: FontWeight.bold),
                       ),
+                    ),
                   ],
                 ),
               ),
             ),
-          )
+          ),
+
+          Positioned(
+            bottom: 0.0,
+            left: 0.0,
+            right: 0.0,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0),
+                ),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    spreadRadius: 0.5,
+                    blurRadius: 16.0,
+                    color: Colors.black54,
+                    offset: Offset(07, 07),
+                  )
+                ],
+              ),
+              height: handymanDetailsContainer,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 12.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Name :",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Text(
+                                ": ${filtered[0].name}",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "Phone Number :",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Text(
+                                ": ${filtered[0].contact}",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "Skill :",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Text(
+                                ": ${filtered[0].servicepro}",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "Handyman Location :",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Text(
+                                "${handyLocationName}",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 18.0,
+                    ),
+                    Container(
+                        height: 40.0,
+                        width: 40.0,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(17.0),
+                          border: Border.all(width: 2.0, color: Colors.grey),
+                        ),
+                        child: GestureDetector(
+                            onTap: () {
+                              resetApp();
+                            },
+                            child: Icon(Icons.close, size: 15.0))),
+                    SizedBox(
+                      height: 7.0,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: Text(
+                        "Cancel",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 17.0, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
   Future<void> getPlaceDirection() async {
-    var initialPos = Provider.of<AppData>(context, listen: false).pickUpLocation;
-    var finalPos =Provider.of<AppData>(context, listen: false).dropOffLocation;
-    
-    
-    
+    var initialPos =
+        Provider.of<AppData>(context, listen: false).pickUpLocation;
+    var finalPos = Provider.of<AppData>(context, listen: false).dropOffLocation;
+
     var pickUpLatLng = LatLng(initialPos!.latitude, initialPos.longitude);
     var dropOffLatLng = LatLng(finalPos!.latitude, finalPos.longitude);
 
     showDialog(
       context: context,
-      builder: (BuildContext context) => ProgressDialog(message: "Please wait..."), 
+      builder: (BuildContext context) =>
+          ProgressDialog(message: "Please wait..."),
     );
 
-    var details = await AssitantMethods.obtainPlaceDirectionDetails(pickUpLatLng, dropOffLatLng);
+    var details = await AssitantMethods.obtainPlaceDirectionDetails(
+        pickUpLatLng, dropOffLatLng);
 
     Navigator.pop(context);
 
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    print(
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     print("This is Encoded Points");
     print(details.encodedPoints);
 
     PolylinePoints polylinePoints = PolylinePoints();
-    List<PointLatLng> decodedPolyLinePointsResult = polylinePoints.decodePolyline(details.encodedPoints);
+    List<PointLatLng> decodedPolyLinePointsResult =
+        polylinePoints.decodePolyline(details.encodedPoints);
 
     pLineCoordinates.clear();
 
-    if(decodedPolyLinePointsResult.isNotEmpty){
-      decodedPolyLinePointsResult.forEach((PointLatLng pointLatLng){
-        pLineCoordinates.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+    if (decodedPolyLinePointsResult.isNotEmpty) {
+      decodedPolyLinePointsResult.forEach((PointLatLng pointLatLng) {
+        pLineCoordinates
+            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       });
     }
 
@@ -790,31 +1101,32 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     });
 
     LatLngBounds latLngBounds;
-    if(pickUpLatLng.latitude > dropOffLatLng.latitude && pickUpLatLng.longitude > dropOffLatLng.longitude){
-      latLngBounds = LatLngBounds(southwest: dropOffLatLng, northeast: pickUpLatLng);
-    }
-    else if (pickUpLatLng.longitude > dropOffLatLng.longitude) {
+    if (pickUpLatLng.latitude > dropOffLatLng.latitude &&
+        pickUpLatLng.longitude > dropOffLatLng.longitude) {
+      latLngBounds =
+          LatLngBounds(southwest: dropOffLatLng, northeast: pickUpLatLng);
+    } else if (pickUpLatLng.longitude > dropOffLatLng.longitude) {
       latLngBounds = LatLngBounds(
           southwest: LatLng(pickUpLatLng.latitude, dropOffLatLng.longitude),
           northeast: LatLng(dropOffLatLng.latitude, pickUpLatLng.longitude));
-    }
-    else if (pickUpLatLng.latitude > dropOffLatLng.latitude){
-      latLngBounds =
-          LatLngBounds(southwest: LatLng(dropOffLatLng.latitude, pickUpLatLng.longitude), northeast: LatLng(pickUpLatLng.latitude, dropOffLatLng.longitude));
-    }
-    else{
-     latLngBounds = latLngBounds =
+    } else if (pickUpLatLng.latitude > dropOffLatLng.latitude) {
+      latLngBounds = LatLngBounds(
+          southwest: LatLng(dropOffLatLng.latitude, pickUpLatLng.longitude),
+          northeast: LatLng(pickUpLatLng.latitude, dropOffLatLng.longitude));
+    } else {
+      latLngBounds = latLngBounds =
           LatLngBounds(southwest: pickUpLatLng, northeast: dropOffLatLng);
     }
 
-    NewGoogleMapController.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
+    NewGoogleMapController.animateCamera(
+        CameraUpdate.newLatLngBounds(latLngBounds, 70));
 
     Marker pickUpLocationMarker = Marker(
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-      infoWindow: InfoWindow(title: initialPos.placeName, snippet: "my location"),
+      infoWindow:
+          InfoWindow(title: initialPos.placeName, snippet: "my location"),
       position: pickUpLatLng,
       markerId: MarkerId("pickUpId"),
-
     );
 
     Marker dropOffLocationMarker = Marker(
@@ -837,7 +1149,6 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
       strokeWidth: 4,
       strokeColor: Colors.blueAccent,
       circleId: CircleId("pickUpId"),
-
     );
 
     Circle dropOffCircle = Circle(
@@ -855,18 +1166,38 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     });
   }
 
-  DropdownMenuItem<String> buildMenuItem(String item) =>
-    DropdownMenuItem(
-      value: item,
-      child: Text(
-        item, 
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,),
-      ),
-    );
+  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+        value: item,
+        child: Text(
+          item,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+      );
+
+  displayToastMessage(String message, BuildContext context) {
+    Fluttertoast.showToast(msg: message);
+  }
+
+  String ? handyLocationName;
+
+ Future getHandymanLocationName() async{
+
+    String url =
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${filtered[1].lat},${filtered[1].lon}&key=$mapkey";
+
+    var response = await RequestAssitant.getRequest(url);
+
+    if (response != "failed") {
+
+      handyLocationName= response["results"][0]["formatted_address"];
+    }
+    print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+    print(handyLocationName);
+
+    return handyLocationName;
+  }
 
 }
-
-
-
-
-

@@ -70,43 +70,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   padding: EdgeInsets.all(20.0),
                   child: Column(
                     children: [
-                      //  Row(
-                      //    mainAxisAlignment: MainAxisAlignment.center,
-                      //    children: <Widget>[
-                      //      Align(
-                      //        alignment: Alignment.center,
-                      //        child:CircleAvatar(
-                      //          radius: 100,
-                      //          backgroundColor: Colors.deepPurple,
-                      //          child: ClipOval(
-                      //            child: SizedBox(
-                      //              width: 100,
-                      //              height: 100,
-                      //              child: (_image!=null)?Image.file(_image, fit: BoxFit.fill)
-                      //              :Image.network(
-                      //                "https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=334&q=80",
-                      //                fit: BoxFit.fill,
-                      //                ),
-                      //            ),
-                      //            ),
-                      //        )
-                      //      ),
-                      //      Padding(
-                      //        padding: EdgeInsets.only(top: 60.0),
-                      //        child: IconButton(
-                      //          icon: Icon(
-                      //            FontAwesomeIcons.camera,
-                      //            size: 30.0,
-                      //          ),
-                      //          onPressed: () {
-                      //            getImage();
-                      //           },
-                      //          ),
-                      //          )
-                      //    ],
-
-                      // ),
-
                       SizedBox(
                         height: 1.0,
                       ),
