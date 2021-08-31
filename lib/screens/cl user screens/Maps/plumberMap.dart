@@ -25,6 +25,8 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 
 import 'configMaps.dart';
 
@@ -141,7 +143,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   double? nowlat;
   double? nowLon; // users current location
 
-  getCurrentLocation() async {
+  Future getCurrentLocation() async {
     //fetch users current location
     final geoposition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -164,12 +166,11 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     getCurrentLocation();
-    getAvailble();
     getHandymanData();
   }
 
   void getHandymanData() {
-    spHandy.once().then((DataSnapshot snap) {
+    spHandy.once().then((DataSnapshot snap) async {
       var data = snap.value;
       handyMen.clear();
       data.forEach((key, value) {
@@ -189,7 +190,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
           print(key);
         });
       });
-      getAvailble();
+      await getAvailble();
     });
   }
 
@@ -242,6 +243,12 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
 
   List<Handymen> filtered = [];
 
+  String hname = "";
+  String hcontact = "";
+  String hskill = "";
+  double? hlat;
+  double? hlon;
+
   Future filterHandmen() async {
     //
     setState(() {
@@ -256,10 +263,34 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
       } else {
         print(
             "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-         print(filtered[1].contact);
-        //print(filtered);
+        hname = filtered[0].name!;
+        hcontact = filtered[0].contact!;
+        hskill = filtered[0].servicepro!;
+        hlat = filtered[0].lat;
+        hlat = filtered[0].lon;
+
+        print(filtered[1].contact);
+        print(filtered);
       }
     });
+  }
+
+  Future<void> _makePhoneCall(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw "Could not launch $url";
+    }
+  }
+
+  List<String> recipients = ["0725111378"];
+
+  Future<void> _sendSMS(String message, List<String> recipients) async {
+    String _result = await sendSMS(message: message, recipients: recipients)
+        .catchError((onError) {
+      print(onError);
+    });
+    print(_result);
   }
 
   //*************************************************************************** */
@@ -736,7 +767,10 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                                   displayToastMessage(
                                       "Please select a service !!!", context);
                                 } else {
-                                  await getHandymanLocationName();
+                                  // await _sendSMS("You have request made by: ${hname},/n Here is the contact details: ${hcontact}",
+                                  //   recipients
+                                  // );
+                                  //await getHandymanLocationName();
                                   await displayHandymanDetailsContainer();
                                   await filterHandmen();
                                   displayRequestRideContainer();
@@ -946,7 +980,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                                 ),
                               ),
                               Text(
-                                ": ${filtered[0].name}",
+                                hname,
+                                // ": ${filtered[0].name}",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -962,11 +997,18 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                                   fontSize: 14,
                                 ),
                               ),
-                              Text(
-                                ": ${filtered[0].contact}",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                              GestureDetector(
+                                onTap: () => setState(() {
+                                  _makePhoneCall('tel:$hcontact');
+                                }),
+                                child: Text(
+                                  hcontact,
+                                  //": ${filtered[0].contact}",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ],
@@ -980,7 +1022,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                                 ),
                               ),
                               Text(
-                                ": ${filtered[0].servicepro}",
+                                hskill,
+                                //": ${filtered[0].servicepro}",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -1183,21 +1226,17 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
 
   String ? handyLocationName;
 
- Future getHandymanLocationName() async{
+  getHandymanLocationName() async {
 
-    String url =
-        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${filtered[1].lat},${filtered[1].lon}&key=$mapkey";
+    String url ="https://maps.googleapis.com/maps/api/geocode/json?latlng=${filtered[1].lat},${filtered[1].lon}&key=$mapkey";
 
     var response = await RequestAssitant.getRequest(url);
 
     if (response != "failed") {
-
-      handyLocationName= response["results"][0]["formatted_address"];
+      handyLocationName =response["results"][0]["address_components"][0]["long_name"];
+      
     }
-    print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-    print(handyLocationName);
 
     return handyLocationName;
   }
-
 }

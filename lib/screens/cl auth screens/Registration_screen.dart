@@ -6,6 +6,10 @@ import 'package:prdip/main.dart';
 import 'package:prdip/screens/cl auth screens/main_screen.dart';
 import 'package:prdip/screens/cl%20auth%20screens/verify.dart';
 import 'package:prdip/widgets/progressDialog.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 
 import 'Login_screen.dart';
 
@@ -284,11 +288,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       displayToastMessage("Error" + errMsg.toString(), context);
     }))
         .user;
+    
+    //FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+      
+    String ? token = await FirebaseMessaging.instance.getToken();
 
     if (firebaseUser != null) {
       //success
       //save info to DB
       Map userDataMap = {
+        "token": token,
         "name": nameTextEditingController.text.trim(),
         "email": emailTextEditingController.text.trim(),
         "phone": phoneTextEditingController.text.trim(),
