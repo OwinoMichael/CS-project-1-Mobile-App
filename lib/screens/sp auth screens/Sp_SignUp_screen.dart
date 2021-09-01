@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:blydev/screens/sp%20auth%20screens/verify.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:blydev/main.dart';
@@ -8,6 +11,10 @@ import 'package:blydev/screens/sp user screens/Landing_screen.dart';
 import 'package:blydev/screens/sp%20auth%20screens/Primary_screen.dart';
 import 'package:blydev/widgets/progressDialog.dart';
 import 'package:blydev/screens/sp auth screens/Sp_Login_screen.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 
 class SpRegistrationScreen extends StatefulWidget {
   static const String idScreen = "sp_register";
@@ -25,23 +32,63 @@ class _SpRegistrationScreenState extends State<SpRegistrationScreen> {
 
   TextEditingController passwordTextEditingController = TextEditingController();
 
+  TextEditingController serviceTextEditingController = TextEditingController();
+
   bool _showEye = false;
 
   bool _passwordIsEncrypted = true;
 
+  double latitudeData = 0;
+  double longitudeData = 0;
+
   String _password = '';
+
+  final items = [
+    "Plumbing","Electrical","Tiling","Woodwork","Glasswork","Paint Job","Metalworks"];
+  String? value;
+
+  DropdownMenuItem<String> buildMenuItem(String item) =>
+    DropdownMenuItem(
+      value: item,
+      child: Text(
+        item, 
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,),
+      ),
+    );
+
+  String _timeString = "";
+
+  // void _getTime() {
+  //   final String formattedDateTime =
+  //       DateFormat('yyyy-MM-dd \n kk:mm:ss').format(DateTime.now()).toString();
+  //   setState(() {
+  //     _timeString = formattedDateTime;
+  //   });
+  // }
+
+  
+  @override
+  void initState() {
+    super.initState();
+    getCurrentLocation();
+    //_getTime();
+  }
+
+  getCurrentLocation() async {
+    final geoposition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high ); 
+
+    setState(() {
+      latitudeData = geoposition.latitude;
+      longitudeData = geoposition.longitude;
+    });
+  }
+   
+   String ? formattedDate;
 
   @override
   Widget build(BuildContext context) {
-    // Future getImage() async{
-    //   var image= await ImagePicker.platform.pickImage(source: ImageSource.gallery);
-    //   //var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
-    //   setState(() {
-    //     _image=image as File;
-    //   });
-    // }
-
+    
     return Scaffold(
         appBar: AppBar(
           title: Text('Sign Up'),
@@ -70,43 +117,7 @@ class _SpRegistrationScreenState extends State<SpRegistrationScreen> {
                   padding: EdgeInsets.all(20.0),
                   child: Column(
                     children: [
-                      //  Row(
-                      //    mainAxisAlignment: MainAxisAlignment.center,
-                      //    children: <Widget>[
-                      //      Align(
-                      //        alignment: Alignment.center,
-                      //        child:CircleAvatar(
-                      //          radius: 100,
-                      //          backgroundColor: Colors.deepPurple,
-                      //          child: ClipOval(
-                      //            child: SizedBox(
-                      //              width: 100,
-                      //              height: 100,
-                      //              child: (_image!=null)?Image.file(_image, fit: BoxFit.fill)
-                      //              :Image.network(
-                      //                "https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=334&q=80",
-                      //                fit: BoxFit.fill,
-                      //                ),
-                      //            ),
-                      //            ),
-                      //        )
-                      //      ),
-                      //      Padding(
-                      //        padding: EdgeInsets.only(top: 60.0),
-                      //        child: IconButton(
-                      //          icon: Icon(
-                      //            FontAwesomeIcons.camera,
-                      //            size: 30.0,
-                      //          ),
-                      //          onPressed: () {
-                      //            getImage();
-                      //           },
-                      //          ),
-                      //          )
-                      //    ],
-
-                      // ),
-
+                      
                       SizedBox(
                         height: 1.0,
                       ),
@@ -171,6 +182,21 @@ class _SpRegistrationScreenState extends State<SpRegistrationScreen> {
                         style: TextStyle(
                           fontSize: 14.0,
                         ),
+                      ),
+
+                      SizedBox(
+                        height: 10.0,
+                      ),
+
+                      DropdownButton<String>(
+
+                        //hint: Text("Select Service"),
+                        value: value,
+                        iconSize: 26,
+                        icon: Icon(Icons.keyboard_arrow_down,
+                            color: Colors.black),
+                        items: items.map(buildMenuItem).toList(),
+                        onChanged: (value) => this.value = value,
                       ),
 
                       SizedBox(
@@ -297,7 +323,12 @@ class _SpRegistrationScreenState extends State<SpRegistrationScreen> {
             ),
           ),
         ));
+
+    
   }
+
+
+  
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -321,16 +352,26 @@ class _SpRegistrationScreenState extends State<SpRegistrationScreen> {
     }))
         .user;
 
+    String ? token = await FirebaseMessaging.instance.getToken();
+
+
     if (firebaseUser != null) {
-      //success
-      //save info to DB
+      
       Map userDataMap = {
+        //"time": _timeString,
+        "token": token,
+        "time": DateTime.now().toString(),
         "name": nameTextEditingController.text.trim(),
         "email": emailTextEditingController.text.trim(),
         "phone": phoneTextEditingController.text.trim(),
+        "service" : value,
+        "latitude": latitudeData,
+        "longitude": longitudeData,
+        
       };
 
       spRef.child(firebaseUser.uid).set(userDataMap);
+
       displayToastMessage(
           "Congratulations, your account has been created.", context);
       // Navigator.pushNamedAndRemoveUntil(
@@ -348,3 +389,5 @@ class _SpRegistrationScreenState extends State<SpRegistrationScreen> {
     Fluttertoast.showToast(msg: message);
   }
 }
+
+

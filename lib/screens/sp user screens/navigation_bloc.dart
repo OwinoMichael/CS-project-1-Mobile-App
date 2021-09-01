@@ -1,15 +1,19 @@
+import 'dart:collection';
 import 'dart:ffi';
 
 import 'package:bloc/bloc.dart';
+import 'package:blydev/screens/sp%20user%20screens/map.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:blydev/screens/sp%20user%20screens/Landing_screen.dart';
 import 'package:blydev/screens/sp%20user%20screens/MyAccount_screen.dart';
 import 'package:blydev/screens/sp%20user%20screens/SpOrder_screen.dart';
 
+
 enum NavigationEvents {
   SpMainScreenClickedEvent, 
   MyAccountClickedEvent, 
   SpOrderScreenClickedEvent,
+  MapViewClikedEvent
   }
 
 abstract class NavigationStates {}
@@ -29,6 +33,10 @@ class NavigationBloc extends Bloc<NavigationEvents, NavigationStates>{
 
       case NavigationEvents.MyAccountClickedEvent:
         yield MyAccount();
+        break;
+
+      case NavigationEvents.MapViewClikedEvent:
+        yield MapView();
         break;
 
       case NavigationEvents.SpOrderScreenClickedEvent:
