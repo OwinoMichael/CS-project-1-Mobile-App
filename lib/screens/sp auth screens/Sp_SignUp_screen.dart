@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:blydev/screens/sp%20auth%20screens/verify.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:blydev/main.dart';
@@ -37,8 +38,8 @@ class _SpRegistrationScreenState extends State<SpRegistrationScreen> {
 
   bool _passwordIsEncrypted = true;
 
-  String latitudeData = "";
-  String longitudeData = "";
+  double latitudeData = 0;
+  double longitudeData = 0;
 
   String _password = '';
 
@@ -57,28 +58,28 @@ class _SpRegistrationScreenState extends State<SpRegistrationScreen> {
 
   String _timeString = "";
 
-  void _getTime() {
-    final String formattedDateTime =
-        DateFormat('yyyy-MM-dd \n kk:mm:ss').format(DateTime.now()).toString();
-    setState(() {
-      _timeString = formattedDateTime;
-    });
-  }
+  // void _getTime() {
+  //   final String formattedDateTime =
+  //       DateFormat('yyyy-MM-dd \n kk:mm:ss').format(DateTime.now()).toString();
+  //   setState(() {
+  //     _timeString = formattedDateTime;
+  //   });
+  // }
 
   
   @override
   void initState() {
     super.initState();
     getCurrentLocation();
-    _getTime();
+    //_getTime();
   }
 
   getCurrentLocation() async {
     final geoposition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high ); 
 
     setState(() {
-      latitudeData = '${geoposition.latitude}';
-      longitudeData = '${geoposition.longitude}';
+      latitudeData = geoposition.latitude;
+      longitudeData = geoposition.longitude;
     });
   }
    
@@ -350,12 +351,16 @@ class _SpRegistrationScreenState extends State<SpRegistrationScreen> {
       displayToastMessage("Error" + errMsg.toString(), context);
     }))
         .user;
-    
+
+    String ? token = await FirebaseMessaging.instance.getToken();
+
 
     if (firebaseUser != null) {
       
       Map userDataMap = {
-        "time": _timeString,
+        //"time": _timeString,
+        "token": token,
+        "time": DateTime.now().toString(),
         "name": nameTextEditingController.text.trim(),
         "email": emailTextEditingController.text.trim(),
         "phone": phoneTextEditingController.text.trim(),

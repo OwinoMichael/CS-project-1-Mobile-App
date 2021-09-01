@@ -15,14 +15,14 @@ class Slide {
 final slideList = [
   Slide(
     imageUrl: 'assets/images/image1.jpg', 
-    title: 'This is our title', 
-    description: 'orem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'),
+    title: 'Welcome to House Fix', 
+    description: 'Having trouble findinig clients? Worry no more, House Fix is here to help.'),
   Slide(
     imageUrl: 'assets/images/image2.jpg', 
-    title: 'Welcome here', 
-    description: 'orem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'),
+    title: 'Connect with clients', 
+    description: 'Once registered, clients can be able to locate you depending on the location you are in.'),
   Slide(
     imageUrl: 'assets/images/image3.jpg', 
     title: 'Click to get started', 
-    description: 'orem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'),
+    description: 'The app is simple and easy to use.'),
 ];
