@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:prdip/Assistants/requestAssistant.dart';
 import 'package:prdip/DataHandler/appData.dart';
 import 'package:prdip/model/address.dart';
+import 'package:prdip/model/clientUser.dart';
 import 'package:prdip/model/placeDetails.dart';
 import 'package:prdip/screens/cl%20user%20screens/Maps/configMaps.dart';
 import 'package:provider/provider.dart';
@@ -63,6 +66,24 @@ class AssitantMethods {
     directionDetails.durationValue = res["routes"][0]["legs"][0]["duration"]["value"];
     
     return directionDetails;
+
+  }
+
+  static void getCurrentUserInfo() async {
+    firebaseUser = await FirebaseAuth.instance.currentUser;
+    String userId = firebaseUser!.uid;
+    DatabaseReference reference = FirebaseDatabase(
+            databaseURL:
+                "https://prdip-2932d-default-rtdb.europe-west1.firebasedatabase.app/")
+        .reference()
+        .child("client-users").child(userId);
+
+  reference.once().then((DataSnapshot dataSnapshot) {
+    if(dataSnapshot.value != null ){
+      userCurrentInfo = Users.fromSnapshot(dataSnapshot);
+    }
+  });
+
 
   }
 } 

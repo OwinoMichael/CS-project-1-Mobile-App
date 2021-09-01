@@ -19,6 +19,7 @@ import 'package:prdip/screens/cl%20user%20screens/home_screen.dart';
 import 'package:prdip/screens/cl%20user%20screens/orders_screen.dart';
 import 'package:prdip/screens/cl%20user%20screens/search_screen.dart';
 import 'package:prdip/screens/cl%20user%20screens/userProfile_screen.dart';
+import 'package:prdip/screens/cl%20user%20screens/Maps/search_map.dart';
 import 'package:prdip/widgets/Divider.dart';
 import 'package:prdip/widgets/progressDialog.dart';
 import 'package:provider/provider.dart';
@@ -94,15 +95,17 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   }
 
   Future displayHandymanDetailsContainer() async {
-    await filterHandmen();
+    //await filterHandmen();
 
     setState(() {
-      handymanDetailsContainer = 274;
+      handymanDetailsContainer = 320;
       searchContainerHeight = 0;
       rideDetailsContainer = 0;
       rideRequestContainer = 0;
-      bottomPaddingOfMap = 270;
+      bottomPaddingOfMap = 330;
     });
+
+     saveOrderDetails();
   }
 
   resetApp() {
@@ -112,6 +115,11 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
       rideRequestContainer = 0;
       handymanDetailsContainer = 0;
       bottomPaddingOfMap = 270;
+
+      polylineSet.clear();
+      markersSet.clear();
+      circlesSet.clear();
+      pLineCoordinates.clear();
     });
   }
 
@@ -167,6 +175,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     super.initState();
     getCurrentLocation();
     getHandymanData();
+    AssitantMethods.getCurrentUserInfo();
   }
 
   void getHandymanData() {
@@ -176,6 +185,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
       data.forEach((key, value) {
         Handymen handy = new Handymen(
           Htime: value['time'],
+          token: value['token'],
           lat: value['latitude'],
           lon: value['longitude'],
           servicepro: value['service'],
@@ -246,8 +256,9 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   String hname = "";
   String hcontact = "";
   String hskill = "";
-  double? hlat;
-  double? hlon;
+  String etoken = "";
+  double hlat = -1.3114665;
+  double hlon = 36.8153358;
 
   Future filterHandmen() async {
     //
@@ -264,12 +275,14 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
         print(
             "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
         hname = filtered[0].name!;
+        etoken = filtered[0].token!;
         hcontact = filtered[0].contact!;
         hskill = filtered[0].servicepro!;
-        hlat = filtered[0].lat;
-        hlat = filtered[0].lon;
+        hlat = filtered[0].lat!;
+        hlat = filtered[0].lon!;
 
         print(filtered[1].contact);
+        print(filtered[1].token);
         print(filtered);
       }
     });
@@ -294,6 +307,11 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   }
 
   //*************************************************************************** */
+
+  
+  
+
+  //**************************************************************************** */
 
   static final CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
@@ -443,7 +461,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
               NewGoogleMapController = controller;
 
               setState(() {
-                bottomPaddingOfMap = 270.0;
+                bottomPaddingOfMap = 280;
                 topPaddingOfMap = 30;
               });
 
@@ -767,12 +785,10 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                                   displayToastMessage(
                                       "Please select a service !!!", context);
                                 } else {
-                                  // await _sendSMS("You have request made by: ${hname},/n Here is the contact details: ${hcontact}",
-                                  //   recipients
-                                  // );
-                                  //await getHandymanLocationName();
+                                  
+                                  await getHandymanLocationName();
                                   await displayHandymanDetailsContainer();
-                                  await filterHandmen();
+                                  filterHandmen();
                                   displayRequestRideContainer();
                                 }
                               },
@@ -965,7 +981,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 12.0,
+                      height: 2.0,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -983,7 +999,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                                 hname,
                                 // ": ${filtered[0].name}",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -1006,7 +1022,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                                   //": ${filtered[0].contact}",
                                   style: TextStyle(
                                     color: Colors.red,
-                                    fontSize: 16,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -1025,7 +1041,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                                 hskill,
                                 //": ${filtered[0].servicepro}",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -1038,12 +1054,88 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                                 style: TextStyle(
                                   fontSize: 14,
                                 ),
-                              ),
+                              ),                             
+                              
+                            ],
+                          ),
+                          Column(
+                            children: [
                               Text(
                                 "${handyLocationName}",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(width: 20),
+                            ],
+                          ),
+                          SizedBox(height: 5),
+                          Row(
+                            children: [
+                              RaisedButton(
+                                onPressed: () async {
+                                  
+                                },
+                                color: Colors.red,
+                                child: Padding(
+                                  padding: EdgeInsets.all(2.5),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Send SMS",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 9,
+                                      ),
+                                      Icon(
+                                        Icons.message,
+                                        color: Colors.white,
+                                        size: 18.0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 59,),
+                              RaisedButton(
+                                onPressed: () async {
+                                  await _sendSMS(
+                                      "You have request made by: ${userCurrentInfo!.name}. Here is the contact details: ${userCurrentInfo!.phone} and the REPAIR LOCATION is: ${Provider.of<AppData>(context, listen: false).pickUpLocation!.placeName}",
+                                      recipients);
+                                },
+                                color: Colors.green,
+                                child: Padding(
+                                  padding: EdgeInsets.all(2.5),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Proceed",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 9,
+                                      ),
+                                      Icon(
+                                        Icons.send,
+                                        color: Colors.white,
+                                        size: 18.0,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
@@ -1052,33 +1144,40 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                       ),
                     ),
                     SizedBox(
-                      height: 18.0,
-                    ),
-                    Container(
-                        height: 40.0,
-                        width: 40.0,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(17.0),
-                          border: Border.all(width: 2.0, color: Colors.grey),
-                        ),
-                        child: GestureDetector(
-                            onTap: () {
-                              resetApp();
-                            },
-                            child: Icon(Icons.close, size: 15.0))),
-                    SizedBox(
                       height: 7.0,
+                    ),  
+                    Column(
+                      children: [
+                        Container(
+                            height: 40.0,
+                            width: 40.0,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(17.0),
+                              border:
+                                  Border.all(width: 2.0, color: Colors.grey),
+                            ),
+                            child: GestureDetector(
+                                onTap: () async {
+                                  await cancelOrder();
+                                  resetApp();
+                                },
+                                child: Icon(Icons.close, size: 15.0))),
+                        SizedBox(
+                          height: 7.0,
+                        ),
+                        Container(
+                          width: double.infinity,
+                          child: Text(
+                            "Cancel Request",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 17.0, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     ),
-                    Container(
-                      width: double.infinity,
-                      child: Text(
-                        "Cancel",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 17.0, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    
                   ],
                 ),
               ),
@@ -1228,15 +1327,55 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
 
   getHandymanLocationName() async {
 
-    String url ="https://maps.googleapis.com/maps/api/geocode/json?latlng=${filtered[1].lat},${filtered[1].lon}&key=$mapkey";
+    String url ="https://maps.googleapis.com/maps/api/geocode/json?latlng=$hlat,$hlon&key=$mapkey";
 
     var response = await RequestAssitant.getRequest(url);
 
     if (response != "failed") {
-      handyLocationName =response["results"][0]["address_components"][0]["long_name"];
+      handyLocationName = response["results"][0]["formatted_address"];
+      
       
     }
 
     return handyLocationName;
   }
+
+
+  DatabaseReference? order;
+
+  Future<void> saveOrderDetails() async {
+    order = FirebaseDatabase(
+            databaseURL:
+                "https://prdip-2932d-default-rtdb.europe-west1.firebasedatabase.app/")
+        .reference()
+        .child("order-details")
+        .push();
+
+    // Map dropOffLocMap = {
+    //   "latitude": address!.latitude.toString(),
+    //   "longitude": address!.longitude.toString(),
+    // };
+
+    Map orderDetailsMap = {
+      "client_token": userCurrentInfo!.token,
+      "handyman_token": etoken,
+      "created_at": DateTime.now().toString(),
+      "client_name": userCurrentInfo!.name,
+      "client_phone": userCurrentInfo!.phone,
+      "client_email": userCurrentInfo!.email,
+      "repair_location": Provider.of<AppData>(context, listen: false)
+          .pickUpLocation!
+          .placeName,
+      "handyman_name": hname,
+      "handyman_phone": hcontact,
+      "service": hskill,
+    };
+
+    order!.set(orderDetailsMap);
+  }
+
+  Future<void> cancelOrder() async {
+    order!.remove();
+  }
+
 }
