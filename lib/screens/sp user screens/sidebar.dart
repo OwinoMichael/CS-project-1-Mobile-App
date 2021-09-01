@@ -8,10 +8,12 @@ import 'package:blydev/screens/sp%20user%20screens/navigation_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'dart:ffi';
 import 'package:rxdart/rxdart.dart';
-
+import 'package:blydev/model/UserModel.dart' as u;
 import 'package:flutter/material.dart';
 
 class Sidebar extends StatefulWidget with NavigationStates {
+  const Sidebar({Key? key, this.user}) : super(key: key);
+  final u.User? user;
  
   @override
   _SidebarState createState() => _SidebarState();
@@ -87,35 +89,8 @@ class _SidebarState extends State<Sidebar> with SingleTickerProviderStateMixin<S
                       color: Colors.deepPurple,
                       child: Column(
                         children: <Widget>[
-                          SizedBox(height: 100,),
-                          ListTile(
-                            title: Text(
-                              "Ralph", 
-                              style: TextStyle(
-                                color: Colors.white, 
-                                fontSize: 30,
-                                fontWeight: FontWeight.w800,
-                                ),                               
-                            ),
-                            subtitle: Text(
-                              "ralph@gmail.com",
-                              style: TextStyle(
-                                   color: Colors.white10, 
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w800,
-                              ),
-                            ),
-
-                            leading: CircleAvatar(
-                              child: Icon(
-                                Icons.perm_identity,
-                                color: Colors.white,
-                                
-                              ),
-                              radius: 40,
-                            ),
-                        
-                          ),
+                          SizedBox(height: 10,),
+                          
 
                           Divider(
                             height: 64,

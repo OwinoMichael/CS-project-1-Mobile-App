@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "697587840198",
+    "project_id": "prdip-2932d",
+    "storage_bucket": "prdip-2932d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:697587840198:android:3d356599082eb6d28e93c7",
+        "android_client_info": {
+          "package_name": "com.owino.prdip"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "697587840198-jpiu57elmiqdeo5j0js3ehifeu6cd1qh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbbY-i70mGekeeDeMe4lZ81f_43fsY864"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "697587840198-jpiu57elmiqdeo5j0js3ehifeu6cd1qh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

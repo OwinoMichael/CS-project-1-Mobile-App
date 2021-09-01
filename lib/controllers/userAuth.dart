@@ -17,7 +17,7 @@ class UserAuth {
     if (userString.isNotEmpty) {
       return u.userFromMap(userString);
     } else {
-      return Future.value(null);
+      return Future.error("Please create an account");
     }
   }
 

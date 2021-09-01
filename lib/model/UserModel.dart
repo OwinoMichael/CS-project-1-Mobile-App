@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+
 User userFromMap(String str) => User.fromMap(json.decode(str));
 
 String userToMap(User data) => json.encode(data.toMap());
@@ -18,6 +20,7 @@ class User {
   String? name;
   String? email;
   String? phone;
+  
 
   factory User.fromMap(Map<String, dynamic> json) => User(
         name: json["name"],
