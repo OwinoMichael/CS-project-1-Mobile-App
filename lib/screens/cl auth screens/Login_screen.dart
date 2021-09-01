@@ -208,7 +208,7 @@ void loginAndAuthentication( BuildContext context) async {
     context: context, 
     barrierDismissible: false,
     builder: (BuildContext context){
-      return ProgressDialog(message: "Authenticating, Please wait ...",);
+      return ProgressDialog(message: "Authenticating, Please wait",);
     }
     );
 

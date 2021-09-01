@@ -2,14 +2,8 @@ import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/appliance.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/electrical.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/glasswork.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/metalwork.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/paintjob.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/plumbing.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/tiling.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/woodwork.dart';
+import 'package:prdip/screens/cl%20user%20screens/Maps/plumberMap.dart';
+
 
 class HomeScreen extends StatefulWidget {
 
@@ -65,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
               GestureDetector(
                 onTap: () {
                   Navigator.pushNamedAndRemoveUntil(
-                        context, Plumbing.idScreen, (route) => false);
+                        context, MapView.idScreen, (route) => false);
                 },
                 child:  Container(
                     height: 180,
@@ -131,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onTap: () {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, Electrical.idScreen, (route) => false);
+                        context, MapView.idScreen, (route) => false);
                   },
               ),
 
@@ -167,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onTap: () {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, Woodwork.idScreen, (route) => false);
+                        context, MapView.idScreen, (route) => false);
                   },
               ), 
 
@@ -204,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onTap: () {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, Appliance.idScreen, (route) => false);
+                        context, MapView.idScreen, (route) => false);
                   },
               ),
 
@@ -278,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onTap: () {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, PaintJob.idScreen, (route) => false);
+                        context, MapView.idScreen, (route) => false);
                   },
               ),
 
@@ -314,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onTap: () {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, Tiling.idScreen, (route) => false);
+                        context, MapView.idScreen, (route) => false);
                   },
               ),
 
@@ -350,7 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onTap: () {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, Metalwork.idScreen, (route) => false);
+                        context, MapView.idScreen, (route) => false);
                   },
               ),
 
@@ -388,7 +382,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onTap: () {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, Glasswork.idScreen, (route) => false);
+                        context, MapView.idScreen, (route) => false);
                   },
               ), 
 

@@ -95,7 +95,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   }
 
   Future displayHandymanDetailsContainer() async {
-    //await filterHandmen();
+     filterHandmen();
 
     setState(() {
       handymanDetailsContainer = 320;
@@ -260,7 +260,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   double hlat = -1.3114665;
   double hlon = 36.8153358;
 
-  Future filterHandmen() async {
+   filterHandmen() {
     //
     setState(() {
       filtered = availableMen
@@ -476,7 +476,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
             left: 22.0,
             child: GestureDetector(
               onTap: () {
-                scaffoldKey.currentState!.openDrawer();
+                 Navigator.pushNamedAndRemoveUntil(
+                    context, MainScreen.idScreen, (route) => false);
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -495,7 +496,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 ),
                 child: CircleAvatar(
                   backgroundColor: Colors.white,
-                  child: Icon(Icons.menu),
+                  child: Icon(Icons.home),
                   radius: 20.0,
                 ),
               ),
@@ -619,7 +620,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                                 height: 4.0,
                               ),
                               Text(
-                                "Your living home address",
+                                "Your current live address",
                                 style: TextStyle(
                                     color: Colors.black54, fontSize: 12.0),
                               ),
@@ -788,8 +789,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                                   
                                   await getHandymanLocationName();
                                   await displayHandymanDetailsContainer();
-                                  filterHandmen();
                                   displayRequestRideContainer();
+                                  
                                 }
                               },
                               color: Colors.deepPurple,
@@ -1075,7 +1076,9 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                             children: [
                               RaisedButton(
                                 onPressed: () async {
-                                  
+                                  await _sendSMS(
+                                      "You have request made by: ${userCurrentInfo!.name}. Here is the contact details: ${userCurrentInfo!.phone} and the REPAIR LOCATION is: ${Provider.of<AppData>(context, listen: false).pickUpLocation!.placeName}",
+                                      recipients);
                                 },
                                 color: Colors.red,
                                 child: Padding(
@@ -1107,9 +1110,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                               SizedBox(width: 59,),
                               RaisedButton(
                                 onPressed: () async {
-                                  await _sendSMS(
-                                      "You have request made by: ${userCurrentInfo!.name}. Here is the contact details: ${userCurrentInfo!.phone} and the REPAIR LOCATION is: ${Provider.of<AppData>(context, listen: false).pickUpLocation!.placeName}",
-                                      recipients);
+                                  Navigator.pushNamedAndRemoveUntil(context,
+                                      MainScreen.idScreen, (route) => false);
                                 },
                                 color: Colors.green,
                                 child: Padding(
@@ -1366,7 +1368,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
       "repair_location": Provider.of<AppData>(context, listen: false)
           .pickUpLocation!
           .placeName,
-      "handyman_name": hname,
+      "handyman_name": filtered[0].name,
       "handyman_phone": hcontact,
       "service": hskill,
     };

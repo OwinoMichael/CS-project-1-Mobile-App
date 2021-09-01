@@ -9,14 +9,6 @@ import 'package:prdip/screens/cl auth screens/forgot_password.dart';
 import 'package:prdip/screens/cl auth screens/main_screen.dart';
 import 'package:prdip/screens/cl%20auth%20screens/SplashScreen.dart';
 import 'package:prdip/screens/cl%20user%20screens/Maps/plumberMap.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/appliance.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/electrical.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/glasswork.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/metalwork.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/paintjob.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/plumbing.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/tiling.dart';
-import 'package:prdip/screens/cl%20user%20screens/ServiceList/woodwork.dart';
 import 'package:prdip/screens/cl%20user%20screens/home_screen.dart';
 import 'package:prdip/screens/cl%20user%20screens/orders_screen.dart';
 import 'package:prdip/screens/cl%20user%20screens/search_screen.dart';
@@ -85,14 +77,6 @@ class MyApp extends StatelessWidget {
           MainScreen.idScreen: (context) => MainScreen(),
           ForgotPasswordScreen.idScreen: (context) => ForgotPasswordScreen(),
           SearchScreen.idScreen: (context) => SearchScreen(),
-          Plumbing.idScreen: (context) => Plumbing(),
-          Appliance.idScreen: (context) => Appliance(),
-          Electrical.idScreen: (context) => Electrical(),
-          Glasswork.idScreen: (context) => Glasswork(),
-          Metalwork.idScreen: (context) => Metalwork(),
-          PaintJob.idScreen: (context) => PaintJob(),
-          Tiling.idScreen: (context) => Tiling(),
-          Woodwork.idScreen: (context) => Woodwork(),
           MapView.idScreen: (context) => MapView(),
           HomeScreen.idScreen: (context) => HomeScreen(),
           OrderScreen.idScreen: (context) => OrderScreen(),

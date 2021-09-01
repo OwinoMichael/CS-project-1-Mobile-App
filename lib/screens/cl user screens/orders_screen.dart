@@ -29,6 +29,7 @@ void getOrderData(){
       clientToken: value['client_token'],
       service: value['service'],
       handyName: value['handyman_name'],
+      contact: value['handyman_phone'],
       loco: value['repair_location'],
       timeCreated: value['created_at']
     );
@@ -79,6 +80,9 @@ List<OrderData> odi = [];
                  new Text('Service : ${odi[index].service}'),
                  new Padding(padding: new EdgeInsets.symmetric(vertical: 3.0)),
                  new Text('Handyman Name : ${odi[index].handyName}'),
+                 new Padding(
+                        padding: new EdgeInsets.symmetric(vertical: 3.0)),
+                    new Text('Handyman Contact : ${odi[index].contact}'),
                  new Padding(padding: new EdgeInsets.symmetric(vertical: 3.0)),
                  new Text('Repair Location: ${odi[index].loco}'),
                  new Padding(padding: new EdgeInsets.symmetric(vertical: 3.0)),
