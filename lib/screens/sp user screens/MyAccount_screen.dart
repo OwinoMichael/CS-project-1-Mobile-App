@@ -29,29 +29,29 @@ class MyAccount extends StatefulWidget with NavigationStates {
 class _MyAccountState extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
-    var _image;
+    // var _image;
 
-    Future<dynamic> pickImage(BuildContext context) async {
-      XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    // Future<dynamic> pickImage(BuildContext context) async {
+    //   XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-      setState(() {
-        _image = image;
-      });
-    }
+    //   setState(() {
+    //     _image = image;
+    //   });
+    // }
 
-    var _imageFile;
+    // var _imageFile;
 
-    Future uploadImage(BuildContext context) async {
-      String fileName = basename(_imageFile.path);
-      Reference storageReference =
-          FirebaseStorage.instance.ref().child('users/profileimage$fileName');
-      UploadTask uploadTask = storageReference.putData(_imageFile);
+    // Future uploadImage(BuildContext context) async {
+    //   String fileName = basename(_imageFile.path);
+    //   Reference storageReference =
+    //       FirebaseStorage.instance.ref().child('users/profileimage$fileName');
+    //   UploadTask uploadTask = storageReference.putData(_imageFile);
       
-      TaskSnapshot taskSnapshot = await uploadTask;
-      taskSnapshot.ref.getDownloadURL().then(
-            (value) => print("Done: $value"),
-          );
-    }
+    //   TaskSnapshot taskSnapshot = await uploadTask;
+    //   taskSnapshot.ref.getDownloadURL().then(
+    //         (value) => print("Done: $value"),
+    //       );
+    // }
 
     
 
@@ -213,6 +213,6 @@ class _MyAccountState extends State<MyAccount> {
                               ),
                             ],
                           ))
-                    ]))));
+                    ));
   }
 }
