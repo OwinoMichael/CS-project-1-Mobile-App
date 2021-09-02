@@ -104,6 +104,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.email),
+                          suffixIcon: IconButton(
+                            color: Colors.deepPurple,
+                            onPressed: () => emailTextEditingController.clear(),
+                            icon: Icon(Icons.close),
+                          ),
                           labelText: "Email",
                           labelStyle: TextStyle(
                             fontSize: 20.0,

@@ -15,8 +15,8 @@ import 'package:prdip/model/UserModel.dart' as u;
 import 'package:prdip/screens/cl user screens/home_screen.dart';
 
 class UserProfile extends StatefulWidget {
-  static const String idScreen = "profile";
   const UserProfile({Key? key, this.user}) : super(key: key);
+  static const String idScreen = "profile";
   final u.User? user;
 
   @override
@@ -55,12 +55,12 @@ class _UserProfileState extends State<UserProfile> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('User Profile'),
+          title: Text('My Account'),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.logout),
               onPressed: () => userAuth.logout().then(
-                (value) {
+                    (value) {
                   if (value) {
                     Phoenix.rebirth(context);
                   } else {
@@ -73,173 +73,144 @@ class _UserProfileState extends State<UserProfile> {
         ),
         body: Builder(
             builder: (context) => Container(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 20.0,
+                    ),
+
+                    SizedBox(
+                      height: 1.0,
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(20.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Column(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text('Name',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 40.0)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(widget.user!.name!,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                            SizedBox(width: 10.0),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Container(
-                                child: Icon(
-                                  FontAwesomeIcons.pen,
-                                  color: Color(0xff476cfb),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text('Name',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20.0)),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(20.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Column(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text('Email',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 40.0)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(widget.user!.email!,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                            SizedBox(width: 20.0),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Container(
-                                child: Icon(
-                                  FontAwesomeIcons.pen,
-                                  color: Color(0xff476cfb),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(20.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Column(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text('Phone Number',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 40.0)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(widget.user!.phone!,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                            SizedBox(width: 20.0),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Container(
-                                child: Icon(
-                                  FontAwesomeIcons.pen,
-                                  color: Color(0xff476cfb),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            RaisedButton(
-                              color: Color(0xff476cfb),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              elevation: 4.0,
-                              splashColor: Colors.blueGrey,
-                              child: Text(
-                                'Cancel',
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(widget.user!.name!,
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 16.0),
+                                    color: Colors.black,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          SizedBox(width: 10.0),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              child: Icon(
+                                FontAwesomeIcons.pen,
+                                color: Color(0xff476cfb),
                               ),
                             ),
-                            RaisedButton(
-                              color: Color(0xff476cfb),
-                              onPressed: () {
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) => HomeScreen()));
-                              },
-                              elevation: 4.0,
-                              splashColor: Colors.blueGrey,
-                              child: Text(
-                                'Submit',
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text('Email',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20.0)),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(widget.user!.email!,
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 16.0),
+                                    color: Colors.black,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          SizedBox(width: 5.0),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              child: Icon(
+                                FontAwesomeIcons.pen,
+                                color: Color(0xff476cfb),
                               ),
                             ),
-                          ]),
-                    ]))));
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text('Phone Number',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20.0)),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(widget.user!.phone!,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          SizedBox(width: 20.0),
+                          Align(
+                            alignment: Alignment.centerRight,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                  ],
+                ))
+        ));
   }
 }

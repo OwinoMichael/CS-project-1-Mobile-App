@@ -56,8 +56,16 @@ List<OrderData> odi = [];
       appBar: AppBar(
         title: Text('Your Orders'),
       ),
-      body: odi.length == 0 ?  new Center(
-        child: new CircularProgressIndicator(),
+      body: odi.length == 0 ?  Column(
+        children: [
+          SizedBox(height: 310,),
+          new Center(
+            child: new CircularProgressIndicator(),
+          ),
+          new Center(
+            child: Text("Please wait, fetching data!!!"),
+          ),
+        ],
       ) : showMyUI() ,
       
     );
