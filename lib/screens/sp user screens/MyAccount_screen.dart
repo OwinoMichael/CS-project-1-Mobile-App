@@ -81,44 +81,7 @@ class _MyAccountState extends State<MyAccount> {
                       SizedBox(
                         height: 20.0,
                       ),
-                      Padding(
-                          padding: EdgeInsets.all(20.0),
-                          child: Column(
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: () {
-                                  pickImage(context);
-                                },
-                              ),
-                              Align(
-                                  alignment: Alignment.center,
-                                  child: CircleAvatar(
-                                    radius: 55,
-                                    backgroundColor: Color(0xffFDCF09),
-                                    child: _image != null
-                                        ? ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            child: Image.file(
-                                              _image,
-                                              width: 100,
-                                              height: 100,
-                                              fit: BoxFit.fitHeight,
-                                            ),
-                                          )
-                                        : Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.grey[200],
-                                                borderRadius:
-                                                    BorderRadius.circular(50)),
-                                            width: 100,
-                                            height: 100,
-                                            child: Icon(
-                                              Icons.camera_alt,
-                                              color: Colors.grey[800],
-                                            ),
-                                          ),
-                                  )),
+                     
                               SizedBox(
                                 height: 1.0,
                               ),
